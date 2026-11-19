@@ -8,7 +8,7 @@
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       background: #0a0e17;
       color: #f3f4f6;
-      max-width: 800px;
+      max-width: 820px;
       margin: 40px auto;
       padding: 24px;
       line-height: 1.6;
@@ -24,17 +24,17 @@
       background: #162032;
       border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 12px;
-      padding: 24px;
+      padding: 28px;
       margin-top: 24px;
     }
     .link-group {
-      margin-bottom: 24px;
-      padding-bottom: 18px;
+      margin-bottom: 28px;
+      padding-bottom: 22px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.06);
     }
     .link-label {
       font-weight: 700;
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       margin-bottom: 6px;
       display: flex;
       align-items: center;
@@ -44,13 +44,14 @@
     .tag-safe { color: #10b981; }
     .test-link {
       display: inline-block;
-      padding: 10px 18px;
-      border-radius: 6px;
+      padding: 12px 22px;
+      border-radius: 8px;
       text-decoration: none;
       font-family: monospace;
-      font-size: 0.9rem;
-      font-weight: 600;
+      font-size: 0.92rem;
+      font-weight: 700;
       transition: all 0.2s;
+      margin-top: 8px;
     }
     .link-danger {
       background: rgba(239, 68, 68, 0.15);
@@ -60,6 +61,7 @@
     .link-danger:hover {
       background: #ef4444;
       color: white;
+      box-shadow: 0 0 15px rgba(239, 68, 68, 0.5);
     }
     .link-safe {
       background: rgba(16, 185, 129, 0.15);
@@ -69,70 +71,73 @@
     .link-safe:hover {
       background: #10b981;
       color: white;
+      box-shadow: 0 0 15px rgba(16, 185, 129, 0.5);
     }
-    .instructions {
-      background: rgba(0, 242, 254, 0.08);
-      border-left: 4px solid #00f2fe;
-      padding: 16px;
+    .behavior-note {
+      font-size: 0.82rem;
+      color: #cbd5e1;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 8px 12px;
       border-radius: 6px;
-      margin-top: 24px;
-      font-size: 0.88rem;
+      margin-top: 10px;
     }
   </style>
 </head>
 <body>
 
-  <h1>🛡️ PhishGuard Real-Time Interception Test Lab</h1>
-  <p>Test the automatic click interception. <strong>You do not need to paste any links into the extension.</strong> Just click any link below with your mouse like a real user on social media.</p>
+  <h1>🛡️ PhishGuard Real-Time Live Click Test Lab</h1>
+  <p>Click the links below with your mouse like a real user. <strong>Do not copy or paste anything.</strong></p>
 
   <div class="test-card">
 
+    <!-- 1. RISK / UNSAFE LINK -->
     <div class="link-group">
       <div class="link-label tag-danger">
-        ⚠️ Test Case 1: Phishing Sponsored Ad (Fake Nafath Portal on .top TLD)
+        🚨 Scenario A: High-Risk Phishing Link (Fake Identity & Prize Ad)
       </div>
-      <p style="font-size:0.8rem; margin: 4px 0 10px 0;">Simulates a fraudulent ad link offering monetary rewards:</p>
+      <p style="font-size:0.85rem; margin:0 0 8px 0; color:#94a3b8;">
+        Simulates a malicious phishing link attempting to harvest login credentials on a disposable <code>.top</code> TLD:
+      </p>
       <a href="http://secure.login.nafath-verify.top/claim?token=89432" class="test-link link-danger">
-        Click to test Phishing Link: http://secure.login.nafath-verify.top/claim
+        👉 CLICK HERE: http://secure.login.nafath-verify.top/claim
       </a>
-    </div>
-
-    <div class="link-group">
-      <div class="link-label tag-danger">
-        ⚠️ Test Case 2: Prize Lottery Scam Ad (Fake MBC Dream on .xyz TLD)
+      <div class="behavior-note">
+        <strong>Expected Behavior:</strong> Navigation is <strong>blocked immediately</strong>. A warning shield pops up on screen asking: <em>"🛡️ Exit / Return to Safety"</em> or <em>"⚠️ Continue Anyway"</em>.
       </div>
-      <p style="font-size:0.8rem; margin: 4px 0 10px 0;">Simulates a fake social media lottery claim link:</p>
-      <a href="http://mbc-dream-prize2026.xyz/winner/bank_details" class="test-link link-danger">
-        Click to test Scam Link: http://mbc-dream-prize2026.xyz/winner
-      </a>
     </div>
 
+    <!-- 2. SAFE WEBINAR LINK -->
     <div class="link-group">
       <div class="link-label tag-safe">
-        ✓ Test Case 3: Verified Legitimate Portal (Nafath National Identity)
+        ✓ Scenario B: Safe Webinar / Meeting Link (Bitly Shortener)
       </div>
-      <p style="font-size:0.8rem; margin: 4px 0 10px 0;">Simulates a legitimate government portal link:</p>
-      <a href="https://nafath.sa/portal/services" class="test-link link-safe" target="_blank">
-        Click to test Safe Link: https://nafath.sa
+      <p style="font-size:0.85rem; margin:0 0 8px 0; color:#94a3b8;">
+        Your webinar meeting invite shortener:
+      </p>
+      <a href="https://bit.ly/3VBx5In" class="test-link link-safe" target="_blank">
+        👉 CLICK HERE: https://bit.ly/3VBx5In
       </a>
+      <div class="behavior-note">
+        <strong>Expected Behavior:</strong> Displays a green <strong>"🛡️ Link Verified Safe — Opening..."</strong> notification at the top of your screen for 1 second, then opens the webinar link directly.
+      </div>
     </div>
 
+    <!-- 3. SAFE DIRECT PORTAL -->
     <div class="link-group" style="border-bottom:none;">
       <div class="link-label tag-safe">
-        ✓ Test Case 4: Verified Legitimate Bank (Al Rajhi Bank Official)
+        ✓ Scenario C: Safe Official Bank Portal (Al Rajhi Official)
       </div>
-      <p style="font-size:0.8rem; margin: 4px 0 10px 0;">Simulates a legitimate commercial banking portal link:</p>
+      <p style="font-size:0.85rem; margin:0 0 8px 0; color:#94a3b8;">
+        Verified commercial banking infrastructure:
+      </p>
       <a href="https://alrajhibank.com.sa" class="test-link link-safe" target="_blank">
-        Click to test Safe Link: https://alrajhibank.com.sa
+        👉 CLICK HERE: https://alrajhibank.com.sa
       </a>
+      <div class="behavior-note">
+        <strong>Expected Behavior:</strong> Shows the 1-second <strong>"Link Verified Safe"</strong> confirmation pill and opens the portal.
+      </div>
     </div>
 
-  </div>
-
-  <div class="instructions">
-    <strong>💡 What Should Happen When You Click:</strong><br>
-    - When you click a <strong>Red Phishing Link</strong>: The extension will instantly freeze navigation, block the page from loading, and display the full-screen <strong>🛑 PhishGuard Shield Alert</strong> with the exact TreeSHAP reasons.<br>
-    - When you click a <strong>Green Safe Link</strong>: The extension recognizes the verified domain and allows normal browsing with zero delay.
   </div>
 
 </body>

@@ -1,7 +1,8 @@
 /**
  * PhishGuard-XAI Content Script (Automatic Link Interceptor)
- * Automatically halts navigation when a user clicks any fraudulent link.
- * Prevents the user from reaching the malicious site or leaking information.
+ * Intercepts clicks on every webpage.
+ * - If SAFE: Displays a 1-second "Verified Safe" security confirmation before opening.
+ * - If RISK: Blocks the link immediately and asks "Exit / Return to Safety" or "Continue Anyway".
  */
 
 let protectionEnabled = true;
@@ -58,12 +59,11 @@ function handleLinkClick(e) {
       const result = response.data;
 
       if (result.risk_score >= 65) {
-        // High Risk / Phishing: BLOCK PAGE AND DISPLAY WARNING SHIELD
+        // High Risk / Phishing: BLOCK PAGE AND ASK USER
         showWarningModal(href, result, targetAnchor);
       } else {
-        // Safe: Allow browser to navigate naturally
-        targetAnchor.setAttribute("data-phishguard-allowed", "true");
-        window.location.href = href;
+        // Safe: Show 1-second "Verified Safe" indicator, then open
+        showSafeToastAndNavigate(href, result, targetAnchor);
       }
     } else {
       // Fallback: Proceed
@@ -71,6 +71,30 @@ function handleLinkClick(e) {
       window.location.href = href;
     }
   });
+}
+
+function showSafeToastAndNavigate(url, result, targetAnchor) {
+  const existing = document.getElementById("pg-safe-toast");
+  if (existing) existing.remove();
+
+  const toast = document.createElement("div");
+  toast.id = "pg-safe-toast";
+  toast.className = "pg-safe-toast";
+  toast.innerHTML = `
+    <span class="pg-toast-shield">🛡️ ✓</span>
+    <div class="pg-toast-text">
+      <strong>Link Verified Safe (${result.risk_score}% Risk)</strong>
+      <span>Authentic domain verified. Opening destination...</span>
+    </div>
+  `;
+  document.body.appendChild(toast);
+
+  // Display for 1 second, then navigate naturally
+  setTimeout(() => {
+    toast.remove();
+    targetAnchor.setAttribute("data-phishguard-allowed", "true");
+    window.location.href = url;
+  }, 950);
 }
 
 function showWarningModal(url, result, originalAnchor) {
@@ -114,10 +138,10 @@ function showWarningModal(url, result, originalAnchor) {
 
       <div class="pg-action-buttons">
         <button id="pg-btn-safe" class="pg-btn-primary">
-          🛡️ Return to Safety (Recommended)
+          🛡️ Exit / Return to Safety (Recommended)
         </button>
         <button id="pg-btn-proceed" class="pg-btn-secondary">
-          I understand the risks, proceed anyway
+          ⚠️ Continue Anyway (Unsafe)
         </button>
       </div>
 
@@ -129,12 +153,12 @@ function showWarningModal(url, result, originalAnchor) {
 
   document.body.appendChild(modal);
 
-  // Return to Safety
+  // Option 1: Exit / Return to Safety
   document.getElementById("pg-btn-safe").addEventListener("click", () => {
     modal.remove();
   });
 
-  // Proceed Anyway
+  // Option 2: Continue Anyway
   document.getElementById("pg-btn-proceed").addEventListener("click", () => {
     modal.remove();
     originalAnchor.setAttribute("data-phishguard-allowed", "true");
