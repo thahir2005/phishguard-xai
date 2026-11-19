@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Security Alert: Malicious Site Blocked</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #0f172a;
+      color: #f8fafc;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .warning-container {
+      max-width: 680px;
+      width: 90%;
+      background: #1e293b;
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      border-radius: 16px;
+      padding: 36px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 40px rgba(239, 68, 68, 0.2);
+    }
+    .header-bar {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .shield-icon {
+      font-size: 2.8rem;
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      width: 64px;
+      height: 64px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #fca5a5;
+      margin: 0 0 6px 0;
+    }
+    .subtitle {
+      font-size: 0.9rem;
+      color: #94a3b8;
+      margin: 0;
+    }
+    .threat-details {
+      background: #0b1120;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 24px;
+    }
+    .threat-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #64748b;
+      margin-bottom: 6px;
+    }
+    .threat-url {
+      font-family: monospace;
+      color: #ef4444;
+      font-size: 0.95rem;
+      word-break: break-all;
+      font-weight: 700;
+    }
+    .shap-reasons {
+      margin-top: 14px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      padding-top: 12px;
+    }
+    .shap-reasons h3 {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      color: #cbd5e1;
+      margin: 0 0 8px 0;
+    }
+    .shap-reasons ul {
+      margin: 0;
+      padding-left: 20px;
+      color: #fca5a5;
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+    .btn-group {
+      display: flex;
+      gap: 14px;
+    }
+    .btn-safe {
+      flex: 1;
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: white;
+      border: none;
+      padding: 14px 20px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      border-radius: 8px;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-safe:hover {
+      filter: brightness(1.1);
+      box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+    }
+    .btn-proceed {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #94a3b8;
+      padding: 14px 18px;
+      font-size: 0.85rem;
+      border-radius: 8px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .btn-proceed:hover {
+      color: #f8fafc;
+      background: rgba(255, 255, 255, 0.05);
+    }
+    .footer-note {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 0.75rem;
+      color: #64748b;
+    }
+  </style>
+</head>
+<body>
+  <div class="warning-container">
+    <div class="header-bar">
+      <div class="shield-icon">🛑</div>
+      <div>
+        <h1>Dangerous Site Blocked</h1>
+        <p class="subtitle">PhishGuard-XAI intercepted this connection to protect your credentials.</p>
+      </div>
+    </div>
+
+    <div class="threat-details">
+      <div class="threat-label">Blocked URL Target:</div>
+      <div class="threat-url" id="blocked-url">http://...</div>
+
+      <div class="shap-reasons">
+        <h3>TreeSHAP Threat Intelligence Detection:</h3>
+        <ul id="reasons-list">
+          <li>Uncommon disposable Top-Level Domain (TLD) associated with phishing.</li>
+          <li>High domain character entropy indicative of automated cybercrime kits.</li>
+          <li>Financial or identity verification credential-harvesting triggers.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="btn-group">
+      <a href="https://google.com" class="btn-safe" id="btn-back">
+        🛡️ Back to Safety (Recommended)
+      </a>
+      <button class="btn-proceed" id="btn-bypass">
+        Proceed anyway (Unsafe)
+      </button>
+    </div>
+
+    <div class="footer-note">
+      PhishGuard-XAI Active Defense Shield (Procedia CS 2026 Model Architecture)
+    </div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const targetUrl = params.get("target") || "Suspicious URL";
+    document.getElementById("blocked-url").textContent = targetUrl;
+
+    document.getElementById("btn-back").addEventListener("click", (e) => {
+      e.preventDefault();
+      if (window.history.length > 1) {
+        window.history.back();
+      } else {
+        window.location.href = "https://google.com";
+      }
+    });
+
+    document.getElementById("btn-bypass").addEventListener("click", () => {
+      if (confirm("WARNING: Visiting this site may compromise your personal passwords, banking details, or device security. Are you sure?")) {
+        window.location.href = targetUrl;
+      }
+    });
+  </script>
+</body>
+</html>

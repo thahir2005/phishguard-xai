@@ -1,11 +1,12 @@
 {
   "manifest_version": 3,
   "name": "PhishGuard-XAI: Real-Time Phishing Defense",
-  "version": "2.0.0",
-  "description": "Explainable AI browser shield detecting fraudulent and malicious URLs on social platforms before you click.",
+  "version": "2.1.0",
+  "description": "Explainable AI browser shield detecting fraudulent and malicious URLs automatically before page loads.",
   "permissions": [
     "storage",
-    "activeTab"
+    "activeTab",
+    "webNavigation"
   ],
   "host_permissions": [
     "http://*/*",
