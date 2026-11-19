@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "PhishGuard-XAI: Real-Time Phishing Defense",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "Explainable AI browser shield detecting fraudulent and malicious URLs automatically before page loads.",
   "permissions": [
     "storage",
@@ -18,9 +18,10 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
+      "all_frames": true,
       "js": ["content.js"],
       "css": ["content.css"],
-      "run_at": "document_idle"
+      "run_at": "document_start"
     }
   ],
   "action": {

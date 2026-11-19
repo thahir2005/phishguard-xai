@@ -1,7 +1,7 @@
 /**
  * PhishGuard-XAI Background Service Worker (Manifest V3)
  * Handles automatic pre-click interception, direct navigation blocking,
- * and intelligent offline heuristic evaluation for webinars & shorteners.
+ * social media link unwrapping (Instagram/Facebook shims), and offline heuristics.
  */
 
 const API_ENDPOINT = "http://localhost:8000/api/scan";
@@ -18,7 +18,32 @@ const TRUSTED_SHORTENERS = [
   "bit.ly", "tinyurl.com", "t.co", "cutt.ly", "rb.gy", "shorturl.at", "goo.gl", "is.gd"
 ];
 
-chrome.runtime.onInstalled.addListener(() => {
+function extractTargetUrl(rawUrl) {
+  try {
+    const urlObj = new URL(rawUrl);
+    // Meta Instagram / Facebook link shim
+    if (urlObj.hostname.includes("instagram.com") || urlObj.hostname.includes("facebook.com")) {
+      const u = urlObj.searchParams.get("u");
+      if (u) return decodeURIComponent(u);
+    }
+    // Google redirect
+    if (urlObj.hostname.includes("google.") && urlObj.searchParams.get("q")) {
+      return decodeURIComponent(urlObj.searchParams.get("q"));
+    }
+    // YouTube redirect
+    if (urlObj.hostname.includes("youtube.com") && urlObj.searchParams.get("q")) {
+      return decodeURIComponent(urlObj.searchParams.get("q"));
+    }
+    // General redirect params
+    for (const key of ["url", "target", "dest", "link", "redirect"]) {
+      const val = urlObj.searchParams.get(key);
+      if (val && val.startsWith("http")) return decodeURIComponent(val);
+    }
+  } catch (e) {}
+  return rawUrl;
+}
+
+chrome.runtime.onInstalled.addListener(async () => {
   chrome.storage.local.set({
     linksScanned: 0,
     threatsBlocked: 0,
@@ -27,22 +52,24 @@ chrome.runtime.onInstalled.addListener(() => {
   console.log("PhishGuard-XAI Shield initialized successfully.");
 });
 
-// 1. Direct Browser Navigation Interceptor (Catches address bar & redirects)
+// 1. Direct Browser Navigation Interceptor (Catches address bar, new tabs & redirects)
 if (chrome.webNavigation && chrome.webNavigation.onBeforeNavigate) {
   chrome.webNavigation.onBeforeNavigate.addListener(async (details) => {
     if (details.frameId !== 0) return;
 
-    const url = details.url;
-    if (!url || !url.startsWith("http")) return;
+    const rawUrl = details.url;
+    if (!rawUrl || !rawUrl.startsWith("http")) return;
 
-    if (url.includes("localhost") || url.includes("127.0.0.1") || url.startsWith("chrome://") || url.startsWith("chrome-extension://")) {
+    if (rawUrl.includes("localhost") || rawUrl.includes("127.0.0.1") || rawUrl.startsWith("chrome://") || rawUrl.startsWith("chrome-extension://")) {
       return;
     }
 
+    const targetUrl = extractTargetUrl(rawUrl);
+
     try {
-      const data = await handleUrlScan(url);
+      const data = await handleUrlScan(targetUrl);
       if (data && data.risk_score >= 65) {
-        const warningUrl = chrome.runtime.getURL(`warning.html?target=${encodeURIComponent(url)}`);
+        const warningUrl = chrome.runtime.getURL(`warning.html?target=${encodeURIComponent(targetUrl)}`);
         chrome.tabs.update(details.tabId, { url: warningUrl });
       }
     } catch (e) {
@@ -54,7 +81,8 @@ if (chrome.webNavigation && chrome.webNavigation.onBeforeNavigate) {
 // 2. Message Dispatcher for Content Script (In-page link clicks)
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === "scanUrl") {
-    handleUrlScan(request.url)
+    const targetUrl = extractTargetUrl(request.url);
+    handleUrlScan(targetUrl)
       .then(result => sendResponse({ success: true, data: result }))
       .catch(err => sendResponse({ success: false, error: err.message }));
     return true;
@@ -99,7 +127,7 @@ async function handleUrlScan(url) {
       return data;
     }
   } catch (err) {
-    // Backend offline: seamlessly fallback to client-side heuristics
+    // Backend offline: fallback to client-side heuristics
   }
 
   const fallback = offlineHeuristicScan(url);
@@ -129,7 +157,6 @@ function offlineHeuristicScan(rawUrl) {
     const parts = host.split(".");
     const tld = parts[parts.length - 1];
 
-    // Collaboration / Webinar Whitelist
     if (TRUSTED_COLLAB.some(c => host.includes(c))) {
       return {
         url: rawUrl,
@@ -152,7 +179,6 @@ function offlineHeuristicScan(rawUrl) {
       if (rawUrl.toLowerCase().includes(w)) wordHits++;
     });
 
-    // If it is a legitimate shortener (webinar / campaign) with NO phishing words
     if (isShortener && wordHits === 0) {
       return {
         url: rawUrl,

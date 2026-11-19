@@ -2,14 +2,14 @@
 PhishGuard-XAI Feature Extraction Engine
 Implements the 20 base features from Dirchaoui et al. (Procedia CS 2026)
 plus 5 novel multilingual and homograph security features.
-Includes intelligence for verified shorteners, webinars, and meeting platforms.
+Includes Meta (Instagram / Facebook) link shim unwrapping and webinar intelligence.
 """
 
 import math
 import re
-from urllib.parse import urlparse
+from urllib.parse import urlparse, parse_qs, unquote
 
-# Common trusted top-level domains (including shortener ccTLDs and meeting domains)
+# Common trusted top-level domains
 COMMON_TLDS = {
     "com", "org", "net", "edu", "gov", "mil", "int",
     "ma", "sa", "ae", "eg", "kw", "qa", "om", "bh", "jo", "lb", "tn", "dz",
@@ -22,24 +22,21 @@ SHORTENER_DOMAINS = {
     "buff.ly", "adf.ly", "bit.do", "cutt.ly", "rb.gy", "shorturl.at"
 }
 
-# Trusted webinar, video conferencing & collaboration platforms
+# Trusted webinar & collaboration platforms
 TRUSTED_COLLAB_DOMAINS = {
     "zoom.us", "meet.google.com", "teams.microsoft.com", "teams.live.com",
     "webex.com", "gotomeeting.com", "eventbrite.com", "lu.ma", "chime.aws"
 }
 
-# Suspicious words including English and Arabic transliterated phishing triggers
+# Suspicious words
 SUSPICIOUS_WORDS = [
-    # English keywords
     "login", "verify", "banking", "lottery", "account", "update", "secure",
     "signin", "wallet", "confirm", "free", "gift", "bonus", "reward", "winner",
     "claim", "prize", "support", "service", "password", "security",
-    # Arabic transliterated / regional keywords
     "nafath", "absher", "rajhi", "ahli", "fawz", "ribh", "tasjeel", "wazifa",
     "musada", "jaiza", "mal", "mabrouk", "aramex", "sadad"
 ]
 
-# Targeted brands for impersonation detection
 PROTECTED_BRANDS = [
     "alrajhibank", "alahli", "snb", "riyadbank", "alinma",
     "absher", "nafath", "stc", "mobily", "zain", "aramex",
@@ -47,7 +44,6 @@ PROTECTED_BRANDS = [
     "whatsapp", "telegram", "apple", "microsoft", "google"
 ]
 
-# Cyrillic lookalikes commonly used in IDN homograph attacks
 HOMOGRAPH_MAP = {
     '\u0430': 'a', '\u0441': 'c', '\u0435': 'e', '\u043e': 'o',
     '\u0440': 'p', '\u0455': 's', '\u0445': 'x', '\u0443': 'y',
@@ -55,8 +51,40 @@ HOMOGRAPH_MAP = {
 }
 
 
+def unwrap_social_redirect(raw_url: str) -> str:
+    """
+    Unwraps Meta (Instagram l.instagram.com, Facebook lm.facebook.com)
+    and Google/YouTube redirect shims to inspect the real destination URL.
+    """
+    try:
+        parsed = urlparse(raw_url if raw_url.startswith("http") else "http://" + raw_url)
+        netloc = parsed.netloc.lower()
+
+        # Meta Instagram / Facebook link shim
+        if "instagram.com" in netloc or "facebook.com" in netloc:
+            qs = parse_qs(parsed.query)
+            if "u" in qs:
+                return unquote(qs["u"][0])
+
+        # Google redirect
+        if "google." in netloc:
+            qs = parse_qs(parsed.query)
+            if "q" in qs:
+                return unquote(qs["q"][0])
+            if "url" in qs:
+                return unquote(qs["url"][0])
+
+        # YouTube redirect
+        if "youtube.com" in netloc:
+            qs = parse_qs(parsed.query)
+            if "q" in qs:
+                return unquote(qs["q"][0])
+    except Exception:
+        pass
+    return raw_url
+
+
 def calculate_shannon_entropy(text: str) -> float:
-    """Calculates Shannon entropy: H(X) = - sum(p(x) * log2(p(x)))"""
     if not text:
         return 0.0
     entropy = 0.0
@@ -72,7 +100,6 @@ def calculate_shannon_entropy(text: str) -> float:
 
 
 def levenshtein_distance(s1: str, s2: str) -> int:
-    """Computes standard Levenshtein edit distance between two strings."""
     if len(s1) < len(s2):
         return levenshtein_distance(s2, s1)
     if len(s2) == 0:
@@ -90,7 +117,8 @@ def levenshtein_distance(s1: str, s2: str) -> int:
 
 
 def extract_features(raw_url: str) -> dict:
-    url = raw_url.strip()
+    # First unwrap social media redirect wrappers (e.g. l.instagram.com/?u=...)
+    url = unwrap_social_redirect(raw_url.strip())
     if not url.startswith(("http://", "https://")):
         url = "http://" + url
 
@@ -108,17 +136,17 @@ def extract_features(raw_url: str) -> dict:
     domain_part = netloc.split(":")[0]
 
     # 1. url_length
-    url_length = len(raw_url)
+    url_length = len(url)
 
     # 2. num_digits
-    num_digits = sum(1 for c in raw_url if c.isdigit())
+    num_digits = sum(1 for c in url if c.isdigit())
 
     # 3. num_special_chars (-_?&=./%#@+~)
     special_chars = set("-_?&=./%#@+~")
-    num_special_chars = sum(1 for c in raw_url if c in special_chars)
+    num_special_chars = sum(1 for c in url if c in special_chars)
 
     # 4. num_slashes
-    num_slashes = raw_url.count("/")
+    num_slashes = url.count("/")
 
     # 5. num_params
     num_params = len(query.split("&")) if query else 0
@@ -149,7 +177,7 @@ def extract_features(raw_url: str) -> dict:
     is_shortened_url = 1 if any(shortener in netloc for shortener in SHORTENER_DOMAINS) else 0
 
     # 10. has_suspicious_words & 11. suspicious_word_count
-    url_lower = raw_url.lower()
+    url_lower = url.lower()
     suspicious_count = 0
     for word in SUSPICIOUS_WORDS:
         suspicious_count += url_lower.count(word)
@@ -159,8 +187,8 @@ def extract_features(raw_url: str) -> dict:
     # 12. repeated_chars
     max_repeated = 1
     current_rep = 1
-    for i in range(1, len(raw_url)):
-        if raw_url[i] == raw_url[i - 1]:
+    for i in range(1, len(url)):
+        if url[i] == url[i - 1]:
             current_rep += 1
             if current_rep > max_repeated:
                 max_repeated = current_rep
@@ -169,12 +197,12 @@ def extract_features(raw_url: str) -> dict:
     repeated_chars = max_repeated
 
     # 13. has_hex
-    has_hex = 1 if re.search(r"%[0-9a-fA-F]{2}", raw_url) else 0
+    has_hex = 1 if re.search(r"%[0-9a-fA-F]{2}", url) else 0
 
     # 14. tld_length
     tld_length = len(tld)
 
-    # 15. is_common_tld (recognizes established TLDs or trusted shortener infrastructure)
+    # 15. is_common_tld
     is_common = (tld in COMMON_TLDS) or is_shortened_url or any(collab in netloc for collab in TRUSTED_COLLAB_DOMAINS)
     is_common_tld = 1 if is_common else 0
 
@@ -193,7 +221,7 @@ def extract_features(raw_url: str) -> dict:
     entropy = calculate_shannon_entropy(domain_name)
 
     # 20. letter_digit_ratio
-    num_letters = sum(1 for c in raw_url if c.isalpha())
+    num_letters = sum(1 for c in url if c.isalpha())
     letter_digit_ratio = round(num_letters / (num_digits + 1), 4)
 
     # --- NOVEL EXTENSION FEATURES ---
