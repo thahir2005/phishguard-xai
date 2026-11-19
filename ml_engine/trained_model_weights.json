@@ -1,0 +1,528 @@
+{
+  "base_log_odds": 0.0021,
+  "learning_rate": 0.18,
+  "n_estimators": 65,
+  "feature_names": [
+    "url_length",
+    "num_digits",
+    "num_special_chars",
+    "num_slashes",
+    "num_params",
+    "num_fragments",
+    "num_subdomains",
+    "has_https",
+    "is_shortened_url",
+    "has_suspicious_words",
+    "suspicious_word_count",
+    "repeated_chars",
+    "has_hex",
+    "tld_length",
+    "is_common_tld",
+    "has_ip",
+    "num_directories",
+    "path_length",
+    "entropy",
+    "letter_digit_ratio",
+    "is_punycode",
+    "homograph_spoof_score",
+    "subdomain_entropy",
+    "brand_impersonation_score",
+    "arabic_ad_scam_flag"
+  ],
+  "trees": [
+    {
+      "feature_idx": 14,
+      "feature_name": "is_common_tld",
+      "threshold": 0.5,
+      "val_left": 0.08627,
+      "val_right": -0.08275
+    },
+    {
+      "feature_idx": 14,
+      "feature_name": "is_common_tld",
+      "threshold": 0.5,
+      "val_left": 0.08239,
+      "val_right": -0.07903
+    },
+    {
+      "feature_idx": 14,
+      "feature_name": "is_common_tld",
+      "threshold": 0.5,
+      "val_left": 0.0787,
+      "val_right": -0.07548
+    },
+    {
+      "feature_idx": 19,
+      "feature_name": "letter_digit_ratio",
+      "threshold": 8.45,
+      "val_left": 0.07512,
+      "val_right": -0.05805
+    },
+    {
+      "feature_idx": 14,
+      "feature_name": "is_common_tld",
+      "threshold": 0.5,
+      "val_left": 0.07293,
+      "val_right": -0.06994
+    },
+    {
+      "feature_idx": 14,
+      "feature_name": "is_common_tld",
+      "threshold": 0.5,
+      "val_left": 0.06974,
+      "val_right": -0.06687
+    },
+    {
+      "feature_idx": 14,
+      "feature_name": "is_common_tld",
+      "threshold": 0.5,
+      "val_left": 0.06673,
+      "val_right": -0.06397
+    },
+    {
+      "feature_idx": 14,
+      "feature_name": "is_common_tld",
+      "threshold": 0.5,
+      "val_left": 0.0639,
+      "val_right": -0.06124
+    },
+    {
+      "feature_idx": 1,
+      "feature_name": "num_digits",
+      "threshold": 0.5,
+      "val_left": -0.06649,
+      "val_right": 0.04203
+    },
+    {
+      "feature_idx": 14,
+      "feature_name": "is_common_tld",
+      "threshold": 0.5,
+      "val_left": 0.05956,
+      "val_right": -0.05707
+    },
+    {
+      "feature_idx": 14,
+      "feature_name": "is_common_tld",
+      "threshold": 0.5,
+      "val_left": 0.05714,
+      "val_right": -0.05473
+    },
+    {
+      "feature_idx": 14,
+      "feature_name": "is_common_tld",
+      "threshold": 0.5,
+      "val_left": 0.05487,
+      "val_right": -0.05253
+    },
+    {
+      "feature_idx": 1,
+      "feature_name": "num_digits",
+      "threshold": 0.5,
+      "val_left": -0.05745,
+      "val_right": 0.03637
+    },
+    {
+      "feature_idx": 14,
+      "feature_name": "is_common_tld",
+      "threshold": 0.5,
+      "val_left": 0.05138,
+      "val_right": -0.04919
+    },
+    {
+      "feature_idx": 14,
+      "feature_name": "is_common_tld",
+      "threshold": 0.5,
+      "val_left": 0.04944,
+      "val_right": -0.04731
+    },
+    {
+      "feature_idx": 14,
+      "feature_name": "is_common_tld",
+      "threshold": 0.5,
+      "val_left": 0.04761,
+      "val_right": -0.04553
+    },
+    {
+      "feature_idx": 14,
+      "feature_name": "is_common_tld",
+      "threshold": 0.5,
+      "val_left": 0.04589,
+      "val_right": -0.04385
+    },
+    {
+      "feature_idx": 19,
+      "feature_name": "letter_digit_ratio",
+      "threshold": 8.45,
+      "val_left": 0.04715,
+      "val_right": -0.03627
+    },
+    {
+      "feature_idx": 14,
+      "feature_name": "is_common_tld",
+      "threshold": 0.5,
+      "val_left": 0.04317,
+      "val_right": -0.04119
+    },
+    {
+      "feature_idx": 14,
+      "feature_name": "is_common_tld",
+      "threshold": 0.5,
+      "val_left": 0.04169,
+      "val_right": -0.03975
+    },
+    {
+      "feature_idx": 19,
+      "feature_name": "letter_digit_ratio",
+      "threshold": 8.45,
+      "val_left": 0.04316,
+      "val_right": -0.03312
+    },
+    {
+      "feature_idx": 14,
+      "feature_name": "is_common_tld",
+      "threshold": 0.5,
+      "val_left": 0.03937,
+      "val_right": -0.03746
+    },
+    {
+      "feature_idx": 14,
+      "feature_name": "is_common_tld",
+      "threshold": 0.5,
+      "val_left": 0.0381,
+      "val_right": -0.03622
+    },
+    {
+      "feature_idx": 19,
+      "feature_name": "letter_digit_ratio",
+      "threshold": 8.45,
+      "val_left": 0.03975,
+      "val_right": -0.03041
+    },
+    {
+      "feature_idx": 14,
+      "feature_name": "is_common_tld",
+      "threshold": 0.5,
+      "val_left": 0.0361,
+      "val_right": -0.03424
+    },
+    {
+      "feature_idx": 19,
+      "feature_name": "letter_digit_ratio",
+      "threshold": 8.45,
+      "val_left": 0.03765,
+      "val_right": -0.02873
+    },
+    {
+      "feature_idx": 19,
+      "feature_name": "letter_digit_ratio",
+      "threshold": 8.45,
+      "val_left": 0.03654,
+      "val_right": -0.02783
+    },
+    {
+      "feature_idx": 14,
+      "feature_name": "is_common_tld",
+      "threshold": 0.5,
+      "val_left": 0.03363,
+      "val_right": -0.03176
+    },
+    {
+      "feature_idx": 14,
+      "feature_name": "is_common_tld",
+      "threshold": 0.5,
+      "val_left": 0.03265,
+      "val_right": -0.0308
+    },
+    {
+      "feature_idx": 14,
+      "feature_name": "is_common_tld",
+      "threshold": 0.5,
+      "val_left": 0.03172,
+      "val_right": -0.02989
+    },
+    {
+      "feature_idx": 14,
+      "feature_name": "is_common_tld",
+      "threshold": 0.5,
+      "val_left": 0.03084,
+      "val_right": -0.02902
+    },
+    {
+      "feature_idx": 19,
+      "feature_name": "letter_digit_ratio",
+      "threshold": 8.45,
+      "val_left": 0.03267,
+      "val_right": -0.02473
+    },
+    {
+      "feature_idx": 14,
+      "feature_name": "is_common_tld",
+      "threshold": 0.5,
+      "val_left": 0.02946,
+      "val_right": -0.02764
+    },
+    {
+      "feature_idx": 14,
+      "feature_name": "is_common_tld",
+      "threshold": 0.5,
+      "val_left": 0.02868,
+      "val_right": -0.02687
+    },
+    {
+      "feature_idx": 1,
+      "feature_name": "num_digits",
+      "threshold": 0.5,
+      "val_left": -0.03272,
+      "val_right": 0.0212
+    },
+    {
+      "feature_idx": 14,
+      "feature_name": "is_common_tld",
+      "threshold": 0.5,
+      "val_left": 0.02742,
+      "val_right": -0.0257
+    },
+    {
+      "feature_idx": 19,
+      "feature_name": "letter_digit_ratio",
+      "threshold": 8.45,
+      "val_left": 0.0296,
+      "val_right": -0.02232
+    },
+    {
+      "feature_idx": 14,
+      "feature_name": "is_common_tld",
+      "threshold": 0.5,
+      "val_left": 0.0263,
+      "val_right": -0.02456
+    },
+    {
+      "feature_idx": 14,
+      "feature_name": "is_common_tld",
+      "threshold": 0.5,
+      "val_left": 0.02565,
+      "val_right": -0.02393
+    },
+    {
+      "feature_idx": 14,
+      "feature_name": "is_common_tld",
+      "threshold": 0.5,
+      "val_left": 0.02504,
+      "val_right": -0.02332
+    },
+    {
+      "feature_idx": 19,
+      "feature_name": "letter_digit_ratio",
+      "threshold": 8.45,
+      "val_left": 0.02751,
+      "val_right": -0.02062
+    },
+    {
+      "feature_idx": 19,
+      "feature_name": "letter_digit_ratio",
+      "threshold": 8.45,
+      "val_left": 0.02689,
+      "val_right": -0.02011
+    },
+    {
+      "feature_idx": 1,
+      "feature_name": "num_digits",
+      "threshold": 0.5,
+      "val_left": -0.02819,
+      "val_right": 0.01845
+    },
+    {
+      "feature_idx": 14,
+      "feature_name": "is_common_tld",
+      "threshold": 0.5,
+      "val_left": 0.02334,
+      "val_right": -0.02165
+    },
+    {
+      "feature_idx": 19,
+      "feature_name": "letter_digit_ratio",
+      "threshold": 8.45,
+      "val_left": 0.02552,
+      "val_right": -0.01904
+    },
+    {
+      "feature_idx": 14,
+      "feature_name": "is_common_tld",
+      "threshold": 0.5,
+      "val_left": 0.0225,
+      "val_right": -0.0208
+    },
+    {
+      "feature_idx": 19,
+      "feature_name": "letter_digit_ratio",
+      "threshold": 8.45,
+      "val_left": 0.02462,
+      "val_right": -0.01831
+    },
+    {
+      "feature_idx": 1,
+      "feature_name": "num_digits",
+      "threshold": 0.5,
+      "val_left": -0.02589,
+      "val_right": 0.01704
+    },
+    {
+      "feature_idx": 14,
+      "feature_name": "is_common_tld",
+      "threshold": 0.5,
+      "val_left": 0.02139,
+      "val_right": -0.01973
+    },
+    {
+      "feature_idx": 1,
+      "feature_name": "num_digits",
+      "threshold": 0.5,
+      "val_left": -0.02497,
+      "val_right": 0.01643
+    },
+    {
+      "feature_idx": 19,
+      "feature_name": "letter_digit_ratio",
+      "threshold": 8.45,
+      "val_left": 0.02313,
+      "val_right": -0.01721
+    },
+    {
+      "feature_idx": 19,
+      "feature_name": "letter_digit_ratio",
+      "threshold": 8.45,
+      "val_left": 0.02268,
+      "val_right": -0.01682
+    },
+    {
+      "feature_idx": 14,
+      "feature_name": "is_common_tld",
+      "threshold": 0.5,
+      "val_left": 0.02014,
+      "val_right": -0.0185
+    },
+    {
+      "feature_idx": 19,
+      "feature_name": "letter_digit_ratio",
+      "threshold": 8.45,
+      "val_left": 0.02196,
+      "val_right": -0.01623
+    },
+    {
+      "feature_idx": 1,
+      "feature_name": "num_digits",
+      "threshold": 0.5,
+      "val_left": -0.02316,
+      "val_right": 0.01534
+    },
+    {
+      "feature_idx": 14,
+      "feature_name": "is_common_tld",
+      "threshold": 0.5,
+      "val_left": 0.01923,
+      "val_right": -0.01765
+    },
+    {
+      "feature_idx": 1,
+      "feature_name": "num_digits",
+      "threshold": 0.5,
+      "val_left": -0.02242,
+      "val_right": 0.01483
+    },
+    {
+      "feature_idx": 19,
+      "feature_name": "letter_digit_ratio",
+      "threshold": 8.45,
+      "val_left": 0.02075,
+      "val_right": -0.01536
+    },
+    {
+      "feature_idx": 1,
+      "feature_name": "num_digits",
+      "threshold": 0.5,
+      "val_left": -0.02173,
+      "val_right": 0.01437
+    },
+    {
+      "feature_idx": 14,
+      "feature_name": "is_common_tld",
+      "threshold": 0.5,
+      "val_left": 0.01816,
+      "val_right": -0.01669
+    },
+    {
+      "feature_idx": 19,
+      "feature_name": "letter_digit_ratio",
+      "threshold": 8.45,
+      "val_left": 0.01991,
+      "val_right": -0.01472
+    },
+    {
+      "feature_idx": 14,
+      "feature_name": "is_common_tld",
+      "threshold": 0.5,
+      "val_left": 0.01765,
+      "val_right": -0.01615
+    },
+    {
+      "feature_idx": 19,
+      "feature_name": "letter_digit_ratio",
+      "threshold": 8.45,
+      "val_left": 0.01936,
+      "val_right": -0.01425
+    },
+    {
+      "feature_idx": 14,
+      "feature_name": "is_common_tld",
+      "threshold": 0.5,
+      "val_left": 0.01716,
+      "val_right": -0.01564
+    },
+    {
+      "feature_idx": 1,
+      "feature_name": "num_digits",
+      "threshold": 0.5,
+      "val_left": -0.02009,
+      "val_right": 0.01337
+    }
+  ],
+  "test_metrics": {
+    "accuracy": 96.88,
+    "precision": 98.28,
+    "recall": 95.4,
+    "f1_score": 96.82,
+    "confusion_matrix": {
+      "TP": 228,
+      "TN": 237,
+      "FP": 4,
+      "FN": 11
+    }
+  },
+  "feature_baselines": {
+    "url_length": 74.424,
+    "num_digits": 4.9156,
+    "num_special_chars": 12.2724,
+    "num_slashes": 4.9964,
+    "num_params": 1.5719,
+    "num_fragments": 0.0,
+    "num_subdomains": 0.6854,
+    "has_https": 0.8453,
+    "is_shortened_url": 0.0875,
+    "has_suspicious_words": 0.7177,
+    "suspicious_word_count": 1.5562,
+    "repeated_chars": 2.3031,
+    "has_hex": 0.0281,
+    "tld_length": 3.1115,
+    "is_common_tld": 0.5104,
+    "has_ip": 0.0203,
+    "num_directories": 2.9964,
+    "path_length": 22.6641,
+    "entropy": 2.8122,
+    "letter_digit_ratio": 25.0998,
+    "is_punycode": 0.0271,
+    "homograph_spoof_score": 0.0,
+    "subdomain_entropy": 0.9532,
+    "brand_impersonation_score": 0.2999,
+    "arabic_ad_scam_flag": 0.3276
+  }
+}

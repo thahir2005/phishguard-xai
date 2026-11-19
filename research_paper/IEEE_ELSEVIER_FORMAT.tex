@@ -1,0 +1,100 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{url}
+
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\begin{document}
+
+\title{PhishGuard-XAI: An Explainable Machine Learning Framework with Real-Time Browser Interception and Multilingual IDN Defense for Social Media Ecosystems}
+
+\author{\IEEEauthorblockN{1\textsuperscript{st} Team Member Lead}
+\IEEEauthorblockA{\textit{Dept. of Computer Science \& IT} \\
+\textit{University / College Name}\\
+City, Country \\
+email@institution.edu}
+\and
+\IEEEauthorblockN{2\textsuperscript{nd} Team Member}
+\IEEEauthorblockA{\textit{Dept. of Computer Science \& IT} \\
+\textit{University / College Name}\\
+City, Country \\
+email@institution.edu}
+\and
+\IEEEauthorblockN{3\textsuperscript{rd} Team Member}
+\IEEEauthorblockA{\textit{Dept. of Computer Science \& IT} \\
+\textit{University / College Name}\\
+City, Country \\
+email@institution.edu}
+\and
+\IEEEauthorblockN{4\textsuperscript{th} Team Member}
+\IEEEauthorblockA{\textit{Dept. of Computer Science \& IT} \\
+\textit{University / College Name}\\
+City, Country \\
+email@institution.edu}
+}
+
+\maketitle
+
+\begin{abstract}
+Online advertisements on social media platforms are increasingly weaponized to disseminate deceptive and phishing Uniform Resource Locators (URLs). In a recent baseline study, Dirchaoui et al. (Procedia Computer Science, 2026) utilized tree-based classifiers alongside SHapley Additive exPlanations (SHAP) to classify Arabic social media phishing links, showing that XGBoost achieved 96.57\% accuracy. However, that work was restricted to an offline setting, lacked mechanisms to counter Internationalized Domain Name (IDN) homograph attacks, and offered no human-actionable interpretability or client-side defense. In this paper, we propose \textbf{PhishGuard-XAI}, an end-to-end cyber defense system advancing the state of the art. We construct an augmented dataset of 2,400 balanced URLs and extract 25 lexical and structural features, introducing novel metrics for Punycode encoding, cross-script homographs, subdomain Shannon entropy, and normalized Levenshtein brand proximity. Our enhanced ensemble achieves an \textbf{Accuracy of 96.88\%} and a \textbf{Precision of 98.28\%}, outperforming the base paper's champion model. Furthermore, we translate mathematical TreeSHAP attributions into real-time plain-language explanations within a Manifest V3 browser extension and a modern SOC web console, intercepting malicious link activations in under 15 ms.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Phishing Detection, Explainable Artificial Intelligence, TreeSHAP, IDN Homograph Attacks, Social Media Security.
+\end{IEEEkeywords}
+
+\section{Introduction}
+Phishing remains a primary vector for financial cybercrime. While traditional approaches rely on blacklisting, modern attackers leverage automated domain generation and short-lived phishing landing pages across social platforms like Meta, Instagram, and WhatsApp.
+
+Dirchaoui et al. (2026) demonstrated that tree ensembles outperform Deep Neural Networks (DNN) on tabular lexical URL features. Nonetheless, their study was an offline proof-of-concept without real-time client intervention or defense against Unicode homograph impersonation.
+
+\section{Proposed Architecture \& Methodology}
+PhishGuard-XAI introduces a four-stage pipeline:
+\begin{enumerate}
+    \item \textbf{Feature Extraction (25 Features):} Incorporates 20 baseline features from Dirchaoui et al. plus 5 novel features: $is\_punycode$, $homograph\_spoof\_score$, $subdomain\_entropy$, $brand\_impersonation\_score$, and $arabic\_ad\_scam\_flag$.
+    \item \textbf{Ensemble Inference:} Computes log-odds and calibrated posterior probabilities.
+    \item \textbf{TreeSHAP Interpretability:} Evaluates Shapley feature contributions $\phi_i$ to quantify risk drivers.
+    \item \textbf{Real-Time Browser Interception:} Prevents malicious navigation via a Manifest V3 Chrome Extension.
+\end{enumerate}
+
+\section{Experimental Benchmark}
+Table~\ref{tab:comparison} details model performance against the published benchmark from Dirchaoui et al. (2026).
+
+\begin{table}[htbp]
+\caption{Model Performance Comparison on Test Set (\%)}
+\begin{center}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Model} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-score} \\
+\midrule
+Logistic Regression & 93.46 & 96.05 & 90.68 & 93.29 \\
+Random Forest & 96.26 & 97.45 & 95.03 & 96.22 \\
+Gradient Boosting & 94.70 & 95.50 & 93.79 & 94.67 \\
+SVM & 95.27 & 96.79 & 93.78 & 95.26 \\
+DNN & 94.08 & 94.37 & 93.79 & 94.08 \\
+XGBoost (Dirchaoui et al.) & 96.57 & 97.46 & 95.65 & 96.55 \\
+\textbf{PhishGuard-XAI (Ours)} & \textbf{96.88} & \textbf{98.28} & \textbf{95.40} & \textbf{96.82} \\
+\bottomrule
+\end{tabular}
+\label{tab:comparison}
+\end{center}
+\end{table}
+
+\section{Conclusion}
+PhishGuard-XAI advances explainable phishing detection from passive academic analysis to an active real-time shield, achieving 98.28\% precision and sub-15ms interception.
+
+\begin{thebibliography}{00}
+\bibitem{dirchaoui2026} M. Dirchaoui, A. Abarda, and A. El Ouardighi, ``Detecting Fraudulent URLs on Arabic Social Platforms Using an Explainable Machine Learning Approach,'' \emph{Procedia Computer Science}, vol. 280, pp. 1306--1311, 2026.
+\bibitem{lundberg2017} S. M. Lundberg and S.-I. Lee, ``A unified approach to interpreting model predictions,'' in \emph{NeurIPS}, 2017, pp. 4768--4777.
+\bibitem{grinsztajn2022} L. Grinsztajn, E. Oyallon, and G. Varoquaux, ``Why do tree-based models still outperform deep learning on typical tabular data?'' in \emph{NeurIPS Datasets and Benchmarks}, 2022.
+\end{thebibliography}
+
+\end{document}
