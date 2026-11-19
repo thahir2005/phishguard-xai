@@ -9,6 +9,7 @@ import json
 import mimetypes
 import os
 import sys
+import socketserver
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
 
@@ -55,7 +56,7 @@ class PhishGuardRequestHandler(BaseHTTPRequestHandler):
             self._send_json_response(200, {
                 "status": "healthy",
                 "service": "PhishGuard-XAI Detection Engine",
-                "version": "2.0.0",
+                "version": "2.1.0",
                 "algorithm": "Gradient Boosted Decision Ensemble (GBDT + TreeSHAP)",
                 "test_metrics": engine.test_metrics
             })
@@ -84,7 +85,6 @@ class PhishGuardRequestHandler(BaseHTTPRequestHandler):
 
         file_path = os.path.join(DASHBOARD_DIR, file_name)
 
-        # Basic path traversal protection
         if not os.path.abspath(file_path).startswith(DASHBOARD_DIR):
             self.send_error(403, "Access Denied")
             return
@@ -140,7 +140,7 @@ class PhishGuardRequestHandler(BaseHTTPRequestHandler):
                 return
 
             results = []
-            for u in urls[:50]:  # limit to 50 per batch
+            for u in urls[:50]:
                 if isinstance(u, str) and u.strip():
                     results.append(engine.scan_url(u.strip()))
 
@@ -153,13 +153,26 @@ class PhishGuardRequestHandler(BaseHTTPRequestHandler):
             self._send_json_response(404, {"error": "Invalid API endpoint."})
 
     def log_message(self, format, *args):
-        # Clean console output
         sys.stderr.write(f"[{self.log_date_time_string()}] {format % args}\n")
+
+
+class ReusableTCPServer(HTTPServer):
+    allow_reuse_address = True
 
 
 def run_server(port=PORT):
     server_address = ("", port)
-    httpd = HTTPServer(server_address, PhishGuardRequestHandler)
+    ReusableTCPServer.allow_reuse_address = True
+    try:
+        httpd = ReusableTCPServer(server_address, PhishGuardRequestHandler)
+    except OSError as e:
+        if e.errno == 48:
+            print(f"[!] Port {port} is currently busy. Another PhishGuard process is already active and serving requests.")
+            print(f"[+] You can continue using http://localhost:{port} or run './start.sh' to cleanly restart it.")
+            sys.exit(0)
+        else:
+            raise
+
     print("=" * 70)
     print(f" PhishGuard-XAI Server running at: http://localhost:{port}")
     print(f" - Web Dashboard UI  : http://localhost:{port}/")

@@ -1,7 +1,7 @@
 #!/bin/bash
 # ========================================================
-# PhishGuard-XAI Master One-Click Startup Script
-# Starts the ML API Server and launches the Web Console
+# PhishGuard-XAI Master Startup Script
+# Automatically manages ports, validates weights, and launches UI
 # ========================================================
 
 PROJECT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -17,7 +17,16 @@ if ! command -v python3 &> /dev/null; then
     exit 1
 fi
 
-# Print Benchmark Verification
+# Automatically free port 8000 if an old instance is occupying it
+PORT_PID=$(lsof -ti:8000 2>/dev/null)
+if [ -n "$PORT_PID" ]; then
+    echo "[!] Port 8000 is currently occupied by previous PID: $PORT_PID"
+    echo "[+] Gracefully resetting port 8000 for a fresh session..."
+    kill -9 $PORT_PID 2>/dev/null
+    sleep 0.8
+fi
+
+# Print Model Validation
 echo "[+] Validating 25-feature model weights & TreeSHAP core..."
 python3 -c "
 from ml_engine.model_core import PhishGuardEngine
