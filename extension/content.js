@@ -1,9 +1,9 @@
 /**
  * PhishGuard-XAI Content Script
  * 1. Automatic On-Page Load Verification:
- *    - When ANY page loads (whether typed in address bar, opened from WhatsApp, or clicked):
- *      - If SAFE: Shows a sleek green "🛡️ ✓ Verified Safe" badge at the top for 0.5 seconds!
- *      - If UNSAFE: Immediately halts page and displays emergency warning shield!
+ *    - SAFE: Displays sleek green badge for 1.0 second!
+ *    - UNHOSTED / NOT FOUND: Displays slate-amber badge "URL Not Found (Not Hosted)" for 1.0 second!
+ *    - UNSAFE: Immediately halts page and displays emergency warning shield!
  * 2. Pre-Click Link Interceptor:
  *    - Intercepts clicks on social media links (Instagram shims, Facebook shims, etc.)
  */
@@ -14,7 +14,6 @@ chrome.storage.local.get(["protectionEnabled"], (data) => {
   if (data.protectionEnabled !== undefined) {
     protectionEnabled = data.protectionEnabled;
   }
-  // Run automatic on-page load verification
   initPageSecurityCheck();
 });
 
@@ -25,6 +24,15 @@ function initPageSecurityCheck() {
   if (!protectionEnabled) return;
 
   const currentUrl = window.location.href;
+
+  // Detect browser error / unhosted / DNS failure pages
+  if (document.title.includes("Site can't be reached") || 
+      document.title.includes("Server Not Found") || 
+      document.title.includes("404") ||
+      document.body && (document.body.innerText.includes("ERR_NAME_NOT_RESOLVED") || document.body.innerText.includes("DNS_PROBE_FINISHED"))) {
+    showOneSecondNotFoundBadge(window.location.hostname || "Target Domain");
+    return;
+  }
 
   // Skip internal browser and extension pages
   if (!currentUrl.startsWith("http://") && !currentUrl.startsWith("https://")) {
@@ -43,19 +51,20 @@ function initPageSecurityCheck() {
     if (response && response.success && response.data) {
       const result = response.data;
 
-      if (result.risk_score >= 65) {
+      if (result.classification === "URL_NOT_FOUND" || result.status === "unhosted") {
+        showOneSecondNotFoundBadge(window.location.hostname);
+      } else if (result.risk_score >= 65) {
         // High Risk / Phishing: IMMEDIATELY COVER PAGE WITH INTERSTITIAL WARNING
         showOnLoadWarningScreen(currentUrl, result);
       } else {
-        // Safe: Show the 0.5-second Green "Verified Safe" Badge
-        showHalfSecondSafeBadge(result);
+        // Safe: Show the 1.0-second Green "Verified Safe" Badge
+        showOneSecondSafeBadge(result);
       }
     }
   });
 }
 
-function showHalfSecondSafeBadge(result) {
-  // Prevent duplicate badges
+function showOneSecondSafeBadge(result) {
   if (document.getElementById("pg-onpage-safe-badge")) return;
 
   const badge = document.createElement("div");
@@ -70,17 +79,40 @@ function showHalfSecondSafeBadge(result) {
   `;
   document.documentElement.appendChild(badge);
 
-  // Keep visible for exactly 0.5 seconds (500ms), then smoothly fade out
+  // Keep visible for exactly 1.0 second (1000ms), then smoothly fade out
   setTimeout(() => {
     badge.classList.add("pg-badge-fadeout");
     setTimeout(() => {
       badge.remove();
-    }, 300);
-  }, 500);
+    }, 350);
+  }, 1000);
+}
+
+function showOneSecondNotFoundBadge(domain) {
+  if (document.getElementById("pg-onpage-notfound-badge")) return;
+
+  const badge = document.createElement("div");
+  badge.id = "pg-onpage-notfound-badge";
+  badge.className = "pg-notfound-badge-pill";
+  badge.innerHTML = `
+    <span class="pg-badge-icon" style="color:#f59e0b;">⚠️</span>
+    <div class="pg-badge-content">
+      <strong style="color:#fbbf24;">URL Not Found</strong>
+      <span>${escapeHtml(domain)} — Domain not active or unhosted</span>
+    </div>
+  `;
+  document.documentElement.appendChild(badge);
+
+  // Display for exactly 1.0 second
+  setTimeout(() => {
+    badge.classList.add("pg-badge-fadeout");
+    setTimeout(() => {
+      badge.remove();
+    }, 350);
+  }, 1000);
 }
 
 function showOnLoadWarningScreen(url, result) {
-  // Stop page scripts and cover entire viewport
   window.stop();
 
   const overlay = document.createElement("div");
@@ -135,7 +167,6 @@ function showOnLoadWarningScreen(url, result) {
 
   document.documentElement.appendChild(overlay);
 
-  // Exit / Return to safety
   document.getElementById("pg-onload-btn-exit").addEventListener("click", () => {
     if (window.history.length > 1) {
       window.history.back();
@@ -144,7 +175,6 @@ function showOnLoadWarningScreen(url, result) {
     }
   });
 
-  // Continue anyway
   document.getElementById("pg-onload-btn-proceed").addEventListener("click", () => {
     sessionStorage.setItem("pg_allowed_" + window.location.hostname, "true");
     overlay.remove();
@@ -217,10 +247,11 @@ function handleLinkClick(e) {
     if (response && response.success && response.data) {
       const result = response.data;
 
-      if (result.risk_score >= 65) {
+      if (result.classification === "URL_NOT_FOUND" || result.status === "unhosted") {
+        showClickNotFoundToast(targetUrl);
+      } else if (result.risk_score >= 65) {
         showClickWarningModal(targetUrl, result, targetAnchor, href);
       } else {
-        // Show 0.5s safe indicator before navigating
         showClickSafeToast(href, targetAnchor);
       }
     } else {
@@ -245,18 +276,40 @@ function showClickSafeToast(originalHref, targetAnchor) {
     <span class="pg-badge-icon">🛡️ ✓</span>
     <div class="pg-badge-content">
       <strong>Link Verified Safe</strong>
-      <span>Opening destination...</span>
+      <span>Authentic destination verified. Opening...</span>
     </div>
   `;
   document.documentElement.appendChild(toast);
 
+  // 1-second display
   setTimeout(() => {
     toast.classList.add("pg-badge-fadeout");
     setTimeout(() => {
       toast.remove();
       allowNavigation(targetAnchor, originalHref);
-    }, 200);
-  }, 500);
+    }, 250);
+  }, 1000);
+}
+
+function showClickNotFoundToast(targetUrl) {
+  const toast = document.createElement("div");
+  toast.className = "pg-notfound-badge-pill";
+  toast.innerHTML = `
+    <span class="pg-badge-icon" style="color:#f59e0b;">⚠️</span>
+    <div class="pg-badge-content">
+      <strong style="color:#fbbf24;">URL Not Found</strong>
+      <span>Destination link is inactive or unhosted on the internet.</span>
+    </div>
+  `;
+  document.documentElement.appendChild(toast);
+
+  // 1-second display
+  setTimeout(() => {
+    toast.classList.add("pg-badge-fadeout");
+    setTimeout(() => {
+      toast.remove();
+    }, 250);
+  }, 1000);
 }
 
 function showClickWarningModal(url, result, originalAnchor, originalHref) {

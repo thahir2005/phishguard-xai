@@ -1,7 +1,8 @@
 /**
  * PhishGuard-XAI Background Service Worker (Manifest V3)
  * Handles automatic pre-click interception, direct navigation blocking,
- * social media link unwrapping (Instagram/Facebook shims), and offline heuristics.
+ * social media link unwrapping (Instagram/Facebook shims), unhosted domain detection,
+ * and offline heuristics.
  */
 
 const API_ENDPOINT = "http://localhost:8000/api/scan";
@@ -52,7 +53,7 @@ chrome.runtime.onInstalled.addListener(async () => {
   console.log("PhishGuard-XAI Shield initialized successfully.");
 });
 
-// 1. Direct Browser Navigation Interceptor (Catches address bar, new tabs & redirects)
+// 1. Direct Browser Navigation Interceptor
 if (chrome.webNavigation && chrome.webNavigation.onBeforeNavigate) {
   chrome.webNavigation.onBeforeNavigate.addListener(async (details) => {
     if (details.frameId !== 0) return;
@@ -78,7 +79,21 @@ if (chrome.webNavigation && chrome.webNavigation.onBeforeNavigate) {
   });
 }
 
-// 2. Message Dispatcher for Content Script (In-page link clicks)
+// 2. DNS Failure / Unhosted Domain Handler
+if (chrome.webNavigation && chrome.webNavigation.onErrorOccurred) {
+  chrome.webNavigation.onErrorOccurred.addListener((details) => {
+    if (details.frameId !== 0) return;
+    try {
+      const parsed = new URL(details.url);
+      chrome.tabs.sendMessage(details.tabId, { 
+        action: "showNotFound", 
+        domain: parsed.hostname 
+      }).catch(() => {});
+    } catch (e) {}
+  });
+}
+
+// 3. Message Dispatcher for Content Script
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === "scanUrl") {
     const targetUrl = extractTargetUrl(request.url);
@@ -126,9 +141,7 @@ async function handleUrlScan(url) {
       }
       return data;
     }
-  } catch (err) {
-    // Backend offline: fallback to client-side heuristics
-  }
+  } catch (err) {}
 
   const fallback = offlineHeuristicScan(url);
   urlCache.set(url, fallback);
@@ -156,6 +169,22 @@ function offlineHeuristicScan(rawUrl) {
     const host = urlObj.hostname.toLowerCase();
     const parts = host.split(".");
     const tld = parts[parts.length - 1];
+
+    // Check for unhosted / invalid domain format
+    if (!host || !host.includes(".") || tld.length < 2 || host.endsWith(".invalid") || host.endsWith(".local") || host.includes("notfound") || host.includes("unhosted")) {
+      return {
+        url: rawUrl,
+        classification: "URL_NOT_FOUND",
+        status: "unhosted",
+        risk_score: 0,
+        badge: "UNHOSTED",
+        human_explanation: {
+          summary: "URL Not Found. This domain is not currently hosted or resolvable on the internet.",
+          action: "DOMAIN NOT FOUND."
+        },
+        shap_explanation: { top_risk_drivers: [], all_features_shap: {} }
+      };
+    }
 
     if (TRUSTED_COLLAB.some(c => host.includes(c))) {
       return {
