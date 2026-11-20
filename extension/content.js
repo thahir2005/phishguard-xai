@@ -17,6 +17,13 @@ chrome.storage.local.get(["protectionEnabled"], (data) => {
   initPageSecurityCheck();
 });
 
+// Listen for messages from background script (e.g. unhosted domain detected)
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.action === "showNotFound") {
+    showOneSecondNotFoundBadge(request.domain || window.location.hostname);
+  }
+});
+
 // ========================================================
 // 1. AUTOMATIC ON-PAGE LOAD VERIFICATION (Address Bar / WhatsApp / Direct Visit)
 // ========================================================

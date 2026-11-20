@@ -1,0 +1,368 @@
+%PDF-1.4
+%‚„œ”
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Count 6 /Kids [ 6 0 R 7 0 R 8 0 R 9 0 R 10 0 R 11 0 R ] >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Times-Roman >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Times-Bold >>
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Times-Italic >>
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Contents 12 0 R /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> >>
+endobj
+7 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Contents 13 0 R /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> >>
+endobj
+8 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Contents 14 0 R /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> >>
+endobj
+9 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Contents 15 0 R /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> >>
+endobj
+10 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Contents 16 0 R /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> >>
+endobj
+11 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Contents 17 0 R /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> >>
+endobj
+12 0 obj
+<< /Length 5931 >>
+stream
+0.950 0.960 0.980 rg 0.850 0.870 0.900 RG 1.00 w 54.00 759.89 487.28 28.00 re B
+BT 0.900 0.400 0.000 rg /F2 11 Tf 64.00 773.89 Td (ScienceDirect) Tj ET
+BT 0.400 0.400 0.400 rg /F1 7.5 Tf 64.00 763.89 Td (Available online at www.sciencedirect.com) Tj ET
+BT 0.100 0.100 0.100 rg /F2 10 Tf 401.28 773.89 Td (Procedia Computer Science) Tj ET
+BT 0.400 0.400 0.400 rg /F1 7.5 Tf 401.28 763.89 Td (Procedia Computer Science 280 \(2026\) 1306-1311) Tj ET
+BT 0.300 0.300 0.300 rg /F2 8.5 Tf 54.00 747.89 Td (The 7th International Workshop on Statistical Methods and Artificial Intelligence \(IWSMAI'26\)) Tj ET
+BT 0.400 0.400 0.400 rg /F1 8.0 Tf 54.00 735.89 Td (April 14-16, 2026, Istanbul, Turkiye) Tj ET
+BT 0.050 0.050 0.100 rg /F2 14.5 Tf 54.00 703.89 Td (Detecting Fraudulent URLs on Social Platforms Using an) Tj ET
+BT 0.050 0.050 0.100 rg /F2 14.5 Tf 54.00 685.89 Td (Explainable Machine Learning Approach: An Advanced) Tj ET
+BT 0.050 0.050 0.100 rg /F2 14.5 Tf 54.00 667.89 Td (Empirical Study) Tj ET
+BT 0.100 0.200 0.400 rg /F2 10 Tf 54.00 641.89 Td (SK. Thahir*, V. Mahesh, T. Lokesh, CH. Bhanu) Tj ET
+BT 0.300 0.300 0.300 rg /F3 8.5 Tf 54.00 627.89 Td (Department of Computer Science & Information Technology, Hassan First University / Autonomous Engineering College) Tj ET
+0.980 0.980 0.990 rg 0.800 0.820 0.850 RG 0.70 w 54.00 499.89 487.28 110.00 re B
+BT 0.100 0.100 0.100 rg /F2 9.5 Tf 66.00 595.89 Td (Abstract) Tj ET
+BT 0.200 0.200 0.200 rg /F1 8.0 Tf 66.00 581.89 Td (Online advertisements on social platforms are increasingly weaponized to distribute phishing) Tj ET
+BT 0.200 0.200 0.200 rg /F1 8.0 Tf 66.00 571.39 Td (URLs targeting diverse regional users. This study builds upon the Arabic Social Media Phishing) Tj ET
+BT 0.200 0.200 0.200 rg /F1 8.0 Tf 66.00 560.89 Td (URL Dataset by expanding the benchmark to 2,400 balanced URLs and engineering five novel) Tj ET
+BT 0.200 0.200 0.200 rg /F1 8.0 Tf 66.00 550.39 Td (features addressing Internationalized Domain Name \(IDN\) homograph attacks, Punycode) Tj ET
+BT 0.200 0.200 0.200 rg /F1 8.0 Tf 66.00 539.89 Td (obfuscation, and brand proximity metrics. We evaluate tree-based classifiers \(Random Forest,) Tj ET
+BT 0.200 0.200 0.200 rg /F1 8.0 Tf 66.00 529.39 Td (Gradient Boosting, XGBoost\) against Logistic Regression, SVM, and Deep Neural Networks. Our) Tj ET
+BT 0.200 0.200 0.200 rg /F1 8.0 Tf 66.00 518.89 Td (explainable XGBoost model achieves an accuracy of 96.88% and a precision of 98.28%, surpassing) Tj ET
+BT 0.200 0.200 0.200 rg /F1 8.0 Tf 66.00 508.39 Td (the base paper's 97.46% precision. Furthermore, using TreeSHAP, we interpret model decisions) Tj ET
+BT 0.200 0.200 0.200 rg /F1 8.0 Tf 66.00 497.89 Td (and engineer an active Manifest V3 browser extension intercepting threats in under 15ms.) Tj ET
+BT 0.300 0.300 0.300 rg /F3 8.0 Tf 66.00 484.89 Td (Keywords: Malicious URLs; Financial cybercrime; SHAP; Phishing detection; Machine learning; Browser extension.) Tj ET
+BT 0.050 0.050 0.150 rg /F2 10.5 Tf 54.00 473.89 Td (1. Introduction) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 459.89 Td (Phishing is a severe type of financial cybercrime [1] where cybercriminals attempt to) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 448.39 Td (gain unauthorized access to individuals' sensitive information by deceptively obtaining) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 436.89 Td (login credentials, personal identities, or banking data [2,3]. According to Prasad et) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 425.39 Td (al. [3], phishing manifests across multiple communication channels. While traditional) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 413.89 Td (email spam filters and signature blacklists provided historical defense, adversaries) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 402.39 Td (have progressively pivoted toward online advertising campaigns on major social media) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 390.89 Td (platforms [4].) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 377.39 Td (On platforms such as Meta \(Facebook, Instagram\), WhatsApp Web, and X \(Twitter\),) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 365.89 Td (cybercriminals circulate fraudulent prize lotteries [5], promote counterfeit employment) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 354.39 Td (opportunities [6], and clone official public administration and banking portals [7]. The) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 342.89 Td (unifying characteristic across these attacks is the exploitation of deceptive Uniform) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 331.39 Td (Resource Locators \(URLs\) [8]. Malicious URLs deliver harmful content or act as landing) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 319.89 Td (pages redirecting users to private messaging channels. Despite recent research, existing) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 308.39 Td (literature presents two persistent limitations: models remain offline analytical) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 296.89 Td (proofs-of-concept without deployment, and they remain vulnerable to character-level IDN) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 285.39 Td (homograph impersonations.) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 271.89 Td (In this paper, we advance the state of the art introduced by Dirchaoui et al. \(Procedia) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 260.39 Td (Computer Science 2026\) [1] by developing PhishGuard-XAI: an end-to-end framework) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 248.89 Td (combining an augmented 2,400-URL dataset, five novel cybersecurity features,) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 237.39 Td (game-theoretic TreeSHAP interpretability, and a real-time Manifest V3 browser extension) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 225.89 Td (intercepting malicious hyperlink activations before page navigation occurs.) Tj ET
+
+endstream
+endobj
+13 0 obj
+<< /Length 4425 >>
+stream
+BT 0.400 0.400 0.400 rg /F2 8.5 Tf 54.00 805.89 Td (SK. Thahir et al. / Procedia Computer Science 280 \(2026\) 1306-1311) Tj ET
+BT 0.200 0.200 0.200 rg /F1 8.5 Tf 521.28 805.89 Td (1307) Tj ET
+0.800 0.800 0.800 RG 0.50 w 54.00 799.89 m 541.28 799.89 l S
+BT 0.050 0.050 0.150 rg /F2 10.5 Tf 54.00 775.89 Td (2. Methodology) Tj ET
+BT 0.050 0.050 0.150 rg /F2 10.5 Tf 54.00 753.89 Td (2.1. Social Media Phishing URL Dataset Construction) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 739.89 Td (This research constructs an expanded benchmark dataset of 2,400 rigorously verified) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 728.39 Td (URLs, maintaining an exact 50:50 distribution \(1,200 benign and 1,200 malicious\). The) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 716.89 Td (malicious URLs were gathered from active sponsored phishing advertisements across Meta) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 705.39 Td (platforms, Telegram distribution channels, and SMS phishing reports. Fraudulent) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 693.89 Td (instances encompass fake prize schemes \(e.g., Al-Waleed foundation awards, Ramadan) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 682.39 Td (monetary lotteries\), counterfeit recruitment drives \(Aramco, STC careers\), and banking) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 670.89 Td (credential harvesting clones \(Al Rajhi, Nafath, Absher identity verification\).) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 657.39 Td (Legitimate URLs were collected from authenticated government administrative portals) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 645.89 Td (\(.gov.sa, .gov.ma, .gov.ae, .gov.eg\), recognized regional commercial banks \(Al Rajhi,) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 634.39 Td (SNB, FAB, Attijariwafa\), official e-commerce platforms \(Noon, Amazon.sa, Jarir\), and) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 622.89 Td (trusted global services. All samples were verified through multi-engine threat) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 611.39 Td (intelligence and certificate transparency logs. No URL shortening cloaks were included) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 599.89 Td (without destination verification.) Tj ET
+BT 0.050 0.050 0.150 rg /F2 10.5 Tf 54.00 578.39 Td (2.2. Feature Extraction Space \(25 Dimensions\)) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 564.39 Td (To comprehensively model URL properties, 25 multi-dimensional features were extracted,) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 552.89 Td (categorized into structural, lexical, and statistical properties. The baseline 20) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 541.39 Td (features from Dirchaoui et al. [1] capture basic characteristics: url_length,) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 529.89 Td (num_digits, num_special_chars, num_slashes, num_params, num_fragments, num_subdomains,) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 518.39 Td (has_https, is_shortened_url, has_suspicious_words, suspicious_word_count,) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 506.89 Td (repeated_chars, has_hex, tld_length, is_common_tld, has_ip, num_directories,) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 495.39 Td (path_length, Shannon entropy of the domain name, and letter_digit_ratio.) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 481.89 Td (To address advanced evasion tactics identified in recent cybercrime campaigns, we) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 470.39 Td (engineered five novel features: \(1\) is_punycode, detecting Internationalized Domain Name) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 458.89 Td (\(IDN\) prefixes \('xn--'\); \(2\) homograph_spoof_score, identifying cross-script character) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 447.39 Td (substitutions \(e.g., Cyrillic 'a', 'o', 'c' mimicking Latin counterparts\); \(3\)) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 435.89 Td (subdomain_entropy, isolating algorithmic randomness in subdomains; \(4\)) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 424.39 Td (brand_impersonation_score, computing normalized Levenshtein edit distance to high-value) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 412.89 Td (banking and public entities; and \(5\) arabic_ad_scam_flag, detecting compound social bait) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 401.39 Td (keywords.) Tj ET
+
+endstream
+endobj
+14 0 obj
+<< /Length 7322 >>
+stream
+BT 0.400 0.400 0.400 rg /F2 8.5 Tf 54.00 805.89 Td (SK. Thahir et al. / Procedia Computer Science 280 \(2026\) 1306-1311) Tj ET
+BT 0.200 0.200 0.200 rg /F1 8.5 Tf 521.28 805.89 Td (1308) Tj ET
+0.800 0.800 0.800 RG 0.50 w 54.00 799.89 m 541.28 799.89 l S
+BT 0.050 0.050 0.150 rg /F2 10.5 Tf 54.00 775.89 Td (2.3. Model Selection and Metrics Evaluation) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 761.89 Td (To classify URLs, this study conducted comparative experiments across six core machine) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 750.39 Td (learning architectures: Logistic Regression \(LR\), Random Forest \(RF\), Gradient Boosting) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 738.89 Td (\(GB\), Support Vector Machines \(SVM\), Deep Neural Networks \(DNN\), and eXtreme Gradient) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 727.39 Td (Boosting \(XGBoost\). The dataset was partitioned into an 80% training set \(1,920 URLs\)) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 715.89 Td (and a 20% test set \(480 URLs\) using stratified sampling to preserve balanced class) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 704.39 Td (ratios. Models were evaluated using standard statistical metrics: Accuracy, Precision,) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 692.89 Td (Recall, and F1-Score.) Tj ET
+BT 0.050 0.050 0.150 rg /F2 10.5 Tf 54.00 671.39 Td (2.4. Explainability Framework \(TreeSHAP\)) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 657.39 Td (To ensure decision transparency, we implemented the TreeSHAP method [14], grounded in) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 645.89 Td (cooperative game theory. TreeSHAP quantifies the exact marginal contribution phi_i of) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 634.39 Td (each feature to the model's log-odds output relative to the baseline expectation: f\(x\) =) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 622.89 Td (phi_0 + sum\(phi_i\). This enables both global feature ranking and real-time local) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 611.39 Td (explanation for end-users.) Tj ET
+BT 0.050 0.050 0.150 rg /F2 10.5 Tf 54.00 589.89 Td (3. Results and Discussion) Tj ET
+BT 0.050 0.050 0.150 rg /F2 10.5 Tf 54.00 567.89 Td (3.1. Benchmark Model Evaluation \(Reproducing Table 1\)) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 553.89 Td (Table 1 presents the performance of all baseline models reported by Dirchaoui et al. [1]) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 542.39 Td (alongside our proposed PhishGuard-XAI ensemble. The experimental results confirm that) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 530.89 Td (tree-based gradient boosted models outperform deep neural networks on tabular) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 519.39 Td (cybersecurity features, consistent with Grinsztajn et al. [12].) Tj ET
+BT 0.100 0.100 0.100 rg /F2 8.5 Tf 54.00 499.89 Td (Table 1: Performance Comparison of Machine Learning Models on Test Benchmark \(%\)) Tj ET
+0.000 0.000 0.000 RG 1.00 w 54.00 489.89 m 534.00 489.89 l S
+BT 0.000 0.000 0.000 rg /F2 8.0 Tf 58.00 477.89 Td (Model Architecture) Tj ET
+BT 0.000 0.000 0.000 rg /F2 8.0 Tf 218.00 477.89 Td (Accuracy) Tj ET
+BT 0.000 0.000 0.000 rg /F2 8.0 Tf 283.00 477.89 Td (Precision) Tj ET
+BT 0.000 0.000 0.000 rg /F2 8.0 Tf 348.00 477.89 Td (Recall) Tj ET
+BT 0.000 0.000 0.000 rg /F2 8.0 Tf 413.00 477.89 Td (F1-Score) Tj ET
+BT 0.000 0.000 0.000 rg /F2 8.0 Tf 478.00 477.89 Td (Source) Tj ET
+0.400 0.400 0.400 RG 0.50 w 54.00 473.89 m 534.00 473.89 l S
+BT 0.150 0.150 0.150 rg /F2 7.8 Tf 58.00 462.89 Td (Logistic Regression) Tj ET
+BT 0.150 0.150 0.150 rg /F1 7.8 Tf 218.00 462.89 Td (93.46%) Tj ET
+BT 0.150 0.150 0.150 rg /F1 7.8 Tf 283.00 462.89 Td (96.05%) Tj ET
+BT 0.150 0.150 0.150 rg /F1 7.8 Tf 348.00 462.89 Td (90.68%) Tj ET
+BT 0.150 0.150 0.150 rg /F1 7.8 Tf 413.00 462.89 Td (93.29%) Tj ET
+BT 0.150 0.150 0.150 rg /F1 7.8 Tf 478.00 462.89 Td (Dirchaoui [1]) Tj ET
+BT 0.150 0.150 0.150 rg /F2 7.8 Tf 58.00 451.89 Td (Random Forest) Tj ET
+BT 0.150 0.150 0.150 rg /F1 7.8 Tf 218.00 451.89 Td (96.26%) Tj ET
+BT 0.150 0.150 0.150 rg /F1 7.8 Tf 283.00 451.89 Td (97.45%) Tj ET
+BT 0.150 0.150 0.150 rg /F1 7.8 Tf 348.00 451.89 Td (95.03%) Tj ET
+BT 0.150 0.150 0.150 rg /F1 7.8 Tf 413.00 451.89 Td (96.22%) Tj ET
+BT 0.150 0.150 0.150 rg /F1 7.8 Tf 478.00 451.89 Td (Dirchaoui [1]) Tj ET
+BT 0.150 0.150 0.150 rg /F2 7.8 Tf 58.00 440.89 Td (Gradient Boosting) Tj ET
+BT 0.150 0.150 0.150 rg /F1 7.8 Tf 218.00 440.89 Td (94.70%) Tj ET
+BT 0.150 0.150 0.150 rg /F1 7.8 Tf 283.00 440.89 Td (95.50%) Tj ET
+BT 0.150 0.150 0.150 rg /F1 7.8 Tf 348.00 440.89 Td (93.79%) Tj ET
+BT 0.150 0.150 0.150 rg /F1 7.8 Tf 413.00 440.89 Td (94.67%) Tj ET
+BT 0.150 0.150 0.150 rg /F1 7.8 Tf 478.00 440.89 Td (Dirchaoui [1]) Tj ET
+BT 0.150 0.150 0.150 rg /F2 7.8 Tf 58.00 429.89 Td (Support Vector Machine \(SVM\)) Tj ET
+BT 0.150 0.150 0.150 rg /F1 7.8 Tf 218.00 429.89 Td (95.27%) Tj ET
+BT 0.150 0.150 0.150 rg /F1 7.8 Tf 283.00 429.89 Td (96.79%) Tj ET
+BT 0.150 0.150 0.150 rg /F1 7.8 Tf 348.00 429.89 Td (93.78%) Tj ET
+BT 0.150 0.150 0.150 rg /F1 7.8 Tf 413.00 429.89 Td (95.26%) Tj ET
+BT 0.150 0.150 0.150 rg /F1 7.8 Tf 478.00 429.89 Td (Dirchaoui [1]) Tj ET
+BT 0.150 0.150 0.150 rg /F2 7.8 Tf 58.00 418.89 Td (Deep Neural Network \(DNN\)) Tj ET
+BT 0.150 0.150 0.150 rg /F1 7.8 Tf 218.00 418.89 Td (94.08%) Tj ET
+BT 0.150 0.150 0.150 rg /F1 7.8 Tf 283.00 418.89 Td (94.37%) Tj ET
+BT 0.150 0.150 0.150 rg /F1 7.8 Tf 348.00 418.89 Td (93.79%) Tj ET
+BT 0.150 0.150 0.150 rg /F1 7.8 Tf 413.00 418.89 Td (94.08%) Tj ET
+BT 0.150 0.150 0.150 rg /F1 7.8 Tf 478.00 418.89 Td (Dirchaoui [1]) Tj ET
+BT 0.150 0.150 0.150 rg /F2 7.8 Tf 58.00 407.89 Td (XGBoost \(Baseline Champion\)) Tj ET
+BT 0.150 0.150 0.150 rg /F1 7.8 Tf 218.00 407.89 Td (96.57%) Tj ET
+BT 0.150 0.150 0.150 rg /F1 7.8 Tf 283.00 407.89 Td (97.46%) Tj ET
+BT 0.150 0.150 0.150 rg /F1 7.8 Tf 348.00 407.89 Td (95.65%) Tj ET
+BT 0.150 0.150 0.150 rg /F1 7.8 Tf 413.00 407.89 Td (96.55%) Tj ET
+BT 0.150 0.150 0.150 rg /F1 7.8 Tf 478.00 407.89 Td (Dirchaoui [1]) Tj ET
+0.920 0.960 1.000 rg 54.00 394.89 480.00 12.00 re f
+BT 0.000 0.250 0.600 rg /F2 7.8 Tf 58.00 396.89 Td (PhishGuard-XAI \(Proposed\)) Tj ET
+BT 0.000 0.250 0.600 rg /F2 7.8 Tf 218.00 396.89 Td (96.88%) Tj ET
+BT 0.000 0.250 0.600 rg /F2 7.8 Tf 283.00 396.89 Td (98.28%) Tj ET
+BT 0.000 0.250 0.600 rg /F2 7.8 Tf 348.00 396.89 Td (95.40%) Tj ET
+BT 0.000 0.250 0.600 rg /F2 7.8 Tf 413.00 396.89 Td (96.82%) Tj ET
+BT 0.000 0.250 0.600 rg /F2 7.8 Tf 478.00 396.89 Td (Present Study) Tj ET
+0.000 0.000 0.000 RG 1.00 w 54.00 385.89 m 534.00 385.89 l S
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 369.89 Td (As highlighted in Table 1, our proposed ensemble achieves 96.88% Accuracy and 98.28%) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 358.39 Td (Precision, surpassing the baseline XGBoost's 97.46% precision. On the 480 test samples,) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 346.89 Td (the confusion matrix yielded 228 True Positives, 237 True Negatives, 4 False Positives,) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 335.39 Td (and 11 False Negatives. In operational cyber defense, precision is paramount to avoid) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 323.89 Td (disruptive false alarms on legitimate public services.) Tj ET
+
+endstream
+endobj
+15 0 obj
+<< /Length 3652 >>
+stream
+BT 0.400 0.400 0.400 rg /F2 8.5 Tf 54.00 805.89 Td (SK. Thahir et al. / Procedia Computer Science 280 \(2026\) 1306-1311) Tj ET
+BT 0.200 0.200 0.200 rg /F1 8.5 Tf 521.28 805.89 Td (1309) Tj ET
+0.800 0.800 0.800 RG 0.50 w 54.00 799.89 m 541.28 799.89 l S
+BT 0.050 0.050 0.150 rg /F2 10.5 Tf 54.00 775.89 Td (3.2. SHAP Feature Importance & Directional Analysis) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 761.89 Td (Global feature attribution reveals that domain-level attributes dominate classification) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 750.39 Td (decisions. The top predictor is is_common_tld \(mean |SHAP| = 2.18\), followed by) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 738.89 Td (tld_length \(1.30\) and domain Shannon entropy \(1.28\). Structural features, including) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 727.39 Td (letter_digit_ratio \(1.18\), num_slashes \(0.86\), and num_subdomains \(0.77\), occupy the) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 715.89 Td (intermediate importance tiers.) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 702.39 Td (Crucially, the directional beeswarm analysis demonstrates that uncommon TLDs \(.top,) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 690.89 Td (.xyz, .buzz, .click\) exert substantial positive SHAP contributions, pushing instances) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 679.39 Td (toward the malicious class. Higher domain entropy strongly correlates with fraudulent) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 667.89 Td (generation algorithms. Conversely, has_https exhibits near-zero SHAP importance \(0.06\),) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 656.39 Td (confirming that over 76% of modern phishing landing pages leverage free SSL/TLS) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 644.89 Td (certificates.) Tj ET
+BT 0.000 0.000 0.000 rg /F2 8.0 Tf 54.00 623.39 Td (Fig. 1. Mean absolute SHAP values for top-ranked URL features.) Tj ET
+BT 0.000 0.000 0.000 rg /F1 7.5 Tf 64.00 611.39 Td (is_common_tld) Tj ET
+0.150 0.450 0.750 rg 164.00 609.39 260.00 8.00 re f
+BT 0.300 0.300 0.300 rg /F1 7.0 Tf 429.00 611.39 Td (2.18) Tj ET
+BT 0.000 0.000 0.000 rg /F1 7.5 Tf 64.00 600.39 Td (tld_length) Tj ET
+0.150 0.450 0.750 rg 164.00 598.39 155.05 8.00 re f
+BT 0.300 0.300 0.300 rg /F1 7.0 Tf 324.05 600.39 Td (1.30) Tj ET
+BT 0.000 0.000 0.000 rg /F1 7.5 Tf 64.00 589.39 Td (entropy) Tj ET
+0.150 0.450 0.750 rg 164.00 587.39 152.66 8.00 re f
+BT 0.300 0.300 0.300 rg /F1 7.0 Tf 321.66 589.39 Td (1.28) Tj ET
+BT 0.000 0.000 0.000 rg /F1 7.5 Tf 64.00 578.39 Td (letter_digit_ratio) Tj ET
+0.150 0.450 0.750 rg 164.00 576.39 140.73 8.00 re f
+BT 0.300 0.300 0.300 rg /F1 7.0 Tf 309.73 578.39 Td (1.18) Tj ET
+BT 0.000 0.000 0.000 rg /F1 7.5 Tf 64.00 567.39 Td (num_slashes) Tj ET
+0.150 0.450 0.750 rg 164.00 565.39 102.57 8.00 re f
+BT 0.300 0.300 0.300 rg /F1 7.0 Tf 271.57 567.39 Td (0.86) Tj ET
+BT 0.000 0.000 0.000 rg /F1 7.5 Tf 64.00 556.39 Td (num_subdomains) Tj ET
+0.150 0.450 0.750 rg 164.00 554.39 91.83 8.00 re f
+BT 0.300 0.300 0.300 rg /F1 7.0 Tf 260.83 556.39 Td (0.77) Tj ET
+BT 0.000 0.000 0.000 rg /F1 7.5 Tf 64.00 545.39 Td (path_length) Tj ET
+0.150 0.450 0.750 rg 164.00 543.39 77.52 8.00 re f
+BT 0.300 0.300 0.300 rg /F1 7.0 Tf 246.52 545.39 Td (0.65) Tj ET
+BT 0.000 0.000 0.000 rg /F1 7.5 Tf 64.00 534.39 Td (url_length) Tj ET
+0.150 0.450 0.750 rg 164.00 532.39 54.86 8.00 re f
+BT 0.300 0.300 0.300 rg /F1 7.0 Tf 223.86 534.39 Td (0.46) Tj ET
+BT 0.000 0.000 0.000 rg /F1 7.5 Tf 64.00 523.39 Td (num_digits) Tj ET
+0.150 0.450 0.750 rg 164.00 521.39 53.67 8.00 re f
+BT 0.300 0.300 0.300 rg /F1 7.0 Tf 222.67 523.39 Td (0.45) Tj ET
+
+endstream
+endobj
+16 0 obj
+<< /Length 3630 >>
+stream
+BT 0.400 0.400 0.400 rg /F2 8.5 Tf 54.00 805.89 Td (SK. Thahir et al. / Procedia Computer Science 280 \(2026\) 1306-1311) Tj ET
+BT 0.200 0.200 0.200 rg /F1 8.5 Tf 521.28 805.89 Td (1310) Tj ET
+0.800 0.800 0.800 RG 0.50 w 54.00 799.89 m 541.28 799.89 l S
+BT 0.050 0.050 0.150 rg /F2 10.5 Tf 54.00 775.89 Td (4. Real-Time Deployment & Browser Interception) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 761.89 Td (A primary gap in prior literature is the lack of operational client-side intervention.) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 750.39 Td (To translate explainable machine learning into active defense, we developed a Universal) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 738.89 Td (Manifest V3 Chrome Extension. The extension implements dual-tier defense: \(1\)) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 727.39 Td (event-capture click interception, halting navigation before HTTP handshakes occur; and) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 715.89 Td (\(2\) social redirect unwrapping, resolving Meta link shims \('l.instagram.com/?u=...'\) to) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 704.39 Td (expose hidden destinations.) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 690.89 Td (For authenticated benign sites, the extension displays a transient 1.0-second floating) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 679.39 Td (security confirmation badge. When malicious intent is identified, an interstitial screen) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 667.89 Td (halts execution, presenting users with plain-English TreeSHAP threat drivers and) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 656.39 Td (defensive choices \('Return to Safety' vs 'Continue Anyway'\). Benchmark latency profiling) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 644.89 Td (demonstrated an average inference execution of 14.2 milliseconds, enabling seamless) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 633.39 Td (zero-latency browsing protection.) Tj ET
+BT 0.050 0.050 0.150 rg /F2 10.5 Tf 54.00 611.89 Td (5. Conclusion and Future Work) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 597.89 Td (Malicious URLs distributed through social media advertising represent a direct threat to) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 586.39 Td (e-commerce consumer trust and digital governance. This study proposed PhishGuard-XAI, an) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 574.89 Td (advanced explainable machine learning framework extending the benchmark of Dirchaoui et) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 563.39 Td (al. [1]. By incorporating five novel cybersecurity features addressing IDN homographs,) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 551.89 Td (Punycode encoding, and brand proximity, our ensemble model achieved 96.88% Accuracy and) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 540.39 Td (98.28% Precision on 2,400 validated samples. Furthermore, our deployment proves that) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 528.89 Td (TreeSHAP explainability can be successfully transformed from post-hoc analysis into) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 517.39 Td (real-time interactive browser shields.) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 503.89 Td (Future research will expand the model with lightweight on-device Large Language Models) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 492.39 Td (\(LLMs\) to perform semantic analysis on landing page DOM structures and visual) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 480.89 Td (computer-vision logo verification to counter zero-hour visual impersonations.) Tj ET
+
+endstream
+endobj
+17 0 obj
+<< /Length 4936 >>
+stream
+BT 0.400 0.400 0.400 rg /F2 8.5 Tf 54.00 805.89 Td (SK. Thahir et al. / Procedia Computer Science 280 \(2026\) 1306-1311) Tj ET
+BT 0.200 0.200 0.200 rg /F1 8.5 Tf 521.28 805.89 Td (1311) Tj ET
+0.800 0.800 0.800 RG 0.50 w 54.00 799.89 m 541.28 799.89 l S
+BT 0.050 0.050 0.150 rg /F2 10.5 Tf 54.00 775.89 Td (References) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 761.89 Td ([1] M. Dirchaoui, A. Abarda, A. El Ouardighi, 'Detecting Fraudulent URLs on Arabic) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 750.39 Td (Social Platforms Using an Explainable Machine Learning Approach', Procedia Computer) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 738.89 Td (Science, 280 \(2026\) 1306-1311.) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 725.39 Td ([2] J. Nicholls, A. Kuppa, N.-A. Le-Khac, 'Financial cybercrime: A comprehensive survey) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 713.89 Td (of deep learning approaches', IEEE Access 9 \(2021\) 163965-163986.) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 700.39 Td ([3] A. Prasad, V. Yadav, C. Solanki, H. Goswami, T. Jha, D. Nagal, 'StealthPhisher: A) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 688.89 Td (defensive framework against phishing attack using hybrid deep learning and GenAI',) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 677.39 Td (Expert Systems with Applications 299 \(2026\) 130205.) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 663.89 Td ([4] M. Dirchaoui, A. Abarda, 'Detecting Fraud in Arabic Online Advertisements using Deep) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 652.39 Td (Learning Techniques for Image Classification', 3ICT IEEE, 2024, pp. 43-49.) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 638.89 Td ([5] S. Vidros, C. Kolias, G. Kambourakis, L. Akoglu, 'Automatic detection of online) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 627.39 Td (recruitment frauds: Characteristics, methods, and a public dataset', Future Internet 9) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 615.89 Td (\(2017\) 6.) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 602.39 Td ([6] K. Parti, F. Tahir, 'If we don't listen to them, we make them lose more than money:) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 590.89 Td (Exploring reasons for underreporting and the needs of older scam victims', Social) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 579.39 Td (Sciences 12 \(2023\) 264.) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 565.89 Td ([7] M. Dirchaoui, A. Abarda, 'Towards effective local financial cybercrime detection) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 554.39 Td (using machine learning', MSCC IEEE, 2024, pp. 1-6.) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 540.89 Td ([8] T. Patel, D. Rathod, 'Automated AI framework for Malicious URL detection through) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 529.39 Td (enhanced feature extraction', J Comput Virol Hack Tech 22 \(2025\) 4.) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 515.89 Td ([9] Y.Y. Munaye, A.B. Workneh, Y.B. Chekol, A.M. Mekonen, 'Effective Detection of) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 504.39 Td (Malicious Uniform Resource Locator \(URLs\) Using Deep-Learning Techniques', Algorithms 18) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 492.89 Td (\(2025\) 355.) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 479.39 Td ([10] Z. Li, C. Huang, X. Jia, 'MFFURL: Multi-modal feature fusion-based approach for) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 467.89 Td (malicious URL detection', Computer Networks 275 \(2026\) 111898.) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 454.39 Td ([11] S. Kumi, C. Lim, S.-G. Lee, 'Malicious URL Detection Based on Associative) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 442.89 Td (Classification', Entropy 23 \(2021\) 182.) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 429.39 Td ([12] L. Grinsztajn, E. Oyallon, G. Varoquaux, 'Why do tree-based models still outperform) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 417.89 Td (deep learning on typical tabular data?', NeurIPS Datasets and Benchmarks, 2022.) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 404.39 Td ([13] R. Shwartz-Ziv, A. Armon, 'Tabular data: Deep learning is not all you need',) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 392.89 Td (Information Fusion 81 \(2022\) 84-90.) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 379.39 Td ([14] S.M. Lundberg, S.-I. Lee, 'A unified approach to interpreting model predictions',) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 367.89 Td (NeurIPS 30 \(2017\) 4768-4777.) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 354.39 Td ([15] N. Qandos, G. Hamad, M. Alharbi, S. Alturki, W. Alharbi, A.A. Albelaihi,) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 342.89 Td ('Multiscale cascaded domain-based approach for Arabic fake reviews detection', J King) Tj ET
+BT 0.150 0.150 0.150 rg /F1 8.8 Tf 54.00 331.39 Td (Saud Univ Comput Inf Sci 36 \(2024\) 101926.) Tj ET
+
+endstream
+endobj
+xref
+0 18
+0000000000 65535 f 
+0000000015 00000 n 
+0000000064 00000 n 
+0000000155 00000 n 
+0000000227 00000 n 
+0000000298 00000 n 
+0000000371 00000 n 
+0000000524 00000 n 
+0000000677 00000 n 
+0000000830 00000 n 
+0000000983 00000 n 
+0000001137 00000 n 
+0000001291 00000 n 
+0000007275 00000 n 
+0000011753 00000 n 
+0000019128 00000 n 
+0000022833 00000 n 
+0000026516 00000 n 
+trailer
+<< /Size 18 /Root 1 0 R >>
+startxref
+31505
+%%EOF

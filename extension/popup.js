@@ -50,8 +50,15 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Open full dashboard
+  // Open full SOC dashboard (Works on all computers via GitHub Pages, or fallback to local)
   openDashBtn.addEventListener("click", () => {
-    chrome.tabs.create({ url: "http://localhost:8000" });
+    // Attempt local if available, else open live GitHub Pages deployment
+    fetch("http://localhost:8000/api/health", { method: "GET", mode: "no-cors" })
+      .then(() => {
+        chrome.tabs.create({ url: "http://localhost:8000" });
+      })
+      .catch(() => {
+        chrome.tabs.create({ url: "https://thahir2005.github.io/phishguard-xai/" });
+      });
   });
 });
