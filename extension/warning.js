@@ -23,8 +23,18 @@ document.addEventListener("DOMContentLoaded", () => {
   const btnBypass = document.getElementById("btn-bypass");
   if (btnBypass) {
     btnBypass.addEventListener("click", () => {
-      if (confirm("WARNING: Visiting this site may compromise your personal passwords, banking details, or device security. Are you sure?")) {
-        window.location.href = targetUrl;
+      if (confirm("WARNING: Visiting this site may compromise your personal passwords, banking details, or device security. Are you sure you want to proceed?")) {
+        try {
+          const parsed = new URL(targetUrl.startsWith("http") ? targetUrl : "http://" + targetUrl);
+          const domain = parsed.hostname.toLowerCase();
+          // Whitelist domain across background worker and session
+          chrome.runtime.sendMessage({ action: "allowDomain", domain: domain }, () => {
+            sessionStorage.setItem("pg_allowed_" + domain, "true");
+            window.location.replace(targetUrl);
+          });
+        } catch (e) {
+          window.location.replace(targetUrl);
+        }
       }
     });
   }

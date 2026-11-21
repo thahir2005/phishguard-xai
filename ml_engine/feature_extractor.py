@@ -9,11 +9,29 @@ import math
 import re
 from urllib.parse import urlparse, parse_qs, unquote
 
-# Common trusted top-level domains
+# Common trusted top-level domains & multi-part public suffixes
 COMMON_TLDS = {
     "com", "org", "net", "edu", "gov", "mil", "int",
     "ma", "sa", "ae", "eg", "kw", "qa", "om", "bh", "jo", "lb", "tn", "dz",
-    "io", "co", "uk", "de", "fr", "in", "us", "ly", "ai", "app", "dev", "me"
+    "io", "co", "uk", "de", "fr", "in", "us", "ly", "ai", "app", "dev", "me",
+    "ac.in", "edu.in", "gov.in", "co.in", "org.in", "net.in", "res.in",
+    "ac.uk", "co.uk", "gov.uk", "org.uk", "edu.sa", "gov.sa", "com.sa",
+    "edu.eg", "gov.eg", "edu.ae", "gov.ae", "edu.au", "gov.au"
+}
+
+# Multi-part second-level domains
+TWO_PART_TLDS = {
+    "ac.in", "edu.in", "gov.in", "co.in", "net.in", "org.in", "res.in", "gen.in",
+    "ac.uk", "co.uk", "gov.uk", "org.uk", "ltd.uk", "me.uk",
+    "edu.sa", "gov.sa", "com.sa", "net.sa", "org.sa", "sch.sa",
+    "edu.eg", "gov.eg", "com.eg", "org.eg",
+    "edu.ae", "gov.ae", "com.ae", "net.ae", "org.ae", "ac.ae",
+    "edu.au", "gov.au", "com.au", "net.au", "org.au",
+    "edu.pk", "gov.pk", "com.pk", "org.pk",
+    "co.za", "ac.za", "gov.za", "org.za",
+    "co.jp", "ac.jp", "go.jp",
+    "co.kr", "ac.kr", "go.kr",
+    "com.br", "edu.br", "gov.br"
 }
 
 # Known URL shortener services
@@ -154,9 +172,14 @@ def extract_features(raw_url: str) -> dict:
     # 6. num_fragments
     num_fragments = 1 if fragment else 0
 
-    # Domain parts and TLD
+    # Domain parts and TLD (support multi-part second-level domains e.g. ac.in, edu.in, gov.in)
     domain_tokens = domain_part.split(".")
-    if len(domain_tokens) > 1:
+    if len(domain_tokens) >= 3 and ".".join(domain_tokens[-2:]) in TWO_PART_TLDS:
+        tld = ".".join(domain_tokens[-2:])
+        domain_name = domain_tokens[-3]
+        subdomain_tokens = domain_tokens[:-3]
+        subdomain = ".".join(subdomain_tokens)
+    elif len(domain_tokens) > 1:
         tld = domain_tokens[-1]
         domain_name = domain_tokens[-2]
         subdomain_tokens = domain_tokens[:-2]
@@ -235,20 +258,21 @@ def extract_features(raw_url: str) -> dict:
     # 23. subdomain_entropy
     subdomain_entropy = calculate_shannon_entropy(subdomain) if subdomain else 0.0
 
-    # 24. brand_impersonation_score
+    # 24. brand_impersonation_score (only for domain strings >= 4 chars with similar length)
     brand_scores = []
     clean_domain = re.sub(r"[^a-z0-9]", "", domain_name)
-    for brand in PROTECTED_BRANDS:
-        if brand in clean_domain and clean_domain != brand:
-            brand_scores.append(1.0)
-        else:
-            dist = levenshtein_distance(clean_domain, brand)
-            if dist <= 2 and clean_domain != brand:
-                brand_scores.append(0.85)
-            elif dist <= 3:
-                brand_scores.append(0.5)
+    if len(clean_domain) >= 4:
+        for brand in PROTECTED_BRANDS:
+            if brand in clean_domain and clean_domain != brand:
+                brand_scores.append(1.0)
             else:
-                brand_scores.append(0.0)
+                dist = levenshtein_distance(clean_domain, brand)
+                if dist <= 2 and clean_domain != brand and abs(len(clean_domain) - len(brand)) <= 1:
+                    brand_scores.append(0.85)
+                elif dist <= 3 and abs(len(clean_domain) - len(brand)) <= 1:
+                    brand_scores.append(0.5)
+                else:
+                    brand_scores.append(0.0)
     brand_impersonation_score = max(brand_scores) if brand_scores else 0.0
 
     # 25. arabic_ad_scam_flag

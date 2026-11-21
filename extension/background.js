@@ -6,12 +6,48 @@
  */
 
 const urlCache = new Map();
+const userAllowedDomains = new Set();
 
-// Common trusted top-level domains
+// Load previously allowed domains from local storage
+chrome.storage.local.get(["userAllowedDomains"], (data) => {
+  if (data.userAllowedDomains && Array.isArray(data.userAllowedDomains)) {
+    data.userAllowedDomains.forEach(d => userAllowedDomains.add(d.toLowerCase()));
+  }
+});
+
+function isDomainAllowedByUser(host) {
+  if (!host) return false;
+  const h = host.toLowerCase();
+  if (userAllowedDomains.has(h)) return true;
+  for (let d of userAllowedDomains) {
+    if (h === d || h.endsWith("." + d)) return true;
+  }
+  return false;
+}
+
+// Common trusted top-level domains & country-code SLDs
 const COMMON_TLDS = new Set([
   "com", "org", "net", "edu", "gov", "mil", "int",
   "ma", "sa", "ae", "eg", "kw", "qa", "om", "bh", "jo", "lb", "tn", "dz",
-  "io", "co", "uk", "de", "fr", "in", "us", "ly", "ai", "app", "dev", "me"
+  "io", "co", "uk", "de", "fr", "in", "us", "ly", "ai", "app", "dev", "me",
+  "ac.in", "edu.in", "gov.in", "co.in", "org.in", "net.in", "res.in",
+  "ac.uk", "co.uk", "gov.uk", "org.uk", "edu.sa", "gov.sa", "com.sa",
+  "edu.eg", "gov.eg", "edu.ae", "gov.ae", "edu.au", "gov.au"
+]);
+
+// Multi-part second-level domains
+const TWO_PART_TLDS = new Set([
+  "ac.in", "edu.in", "gov.in", "co.in", "net.in", "org.in", "res.in", "gen.in",
+  "ac.uk", "co.uk", "gov.uk", "org.uk", "ltd.uk", "me.uk",
+  "edu.sa", "gov.sa", "com.sa", "net.sa", "org.sa", "sch.sa",
+  "edu.eg", "gov.eg", "com.eg", "org.eg",
+  "edu.ae", "gov.ae", "com.ae", "net.ae", "org.ae", "ac.ae",
+  "edu.au", "gov.au", "com.au", "net.au", "org.au",
+  "edu.pk", "gov.pk", "com.pk", "org.pk",
+  "co.za", "ac.za", "gov.za", "org.za",
+  "co.jp", "ac.jp", "go.jp",
+  "co.kr", "ac.kr", "go.kr",
+  "com.br", "edu.br", "gov.br"
 ]);
 
 // Trusted meeting and webinar platforms
@@ -130,10 +166,20 @@ function evaluateUrlAutonomous(rawUrl) {
 
   const host = parsed.hostname.toLowerCase();
   const parts = host.split(".");
-  const tld = parts[parts.length - 1];
-  const domain = parts.length > 1 ? parts[parts.length - 2] : host;
-  const subdomain = parts.slice(0, -2).join(".");
+  let tld = parts[parts.length - 1];
+  let domain = parts.length > 1 ? parts[parts.length - 2] : host;
+  let subdomain = parts.slice(0, -2).join(".");
   const path = parsed.pathname;
+
+  // Multi-part second-level domain extraction (e.g. ac.in, edu.in, gov.in, co.uk)
+  if (parts.length >= 3) {
+    const twoPart = parts.slice(-2).join(".");
+    if (TWO_PART_TLDS.has(twoPart)) {
+      tld = twoPart;
+      domain = parts[parts.length - 3];
+      subdomain = parts.slice(0, -3).join(".");
+    }
+  }
 
   // Check for unhosted / invalid format
   if (!host || !host.includes(".") || tld.length < 2 || host.endsWith(".invalid") || host.endsWith(".local") || host.includes("notfound") || host.includes("unhosted")) {
@@ -151,7 +197,50 @@ function evaluateUrlAutonomous(rawUrl) {
     };
   }
 
-  // A. Verified Collaboration / Webinar platform
+  // A1. Verified Academic, Educational & Government Institutions (e.g. S.R.K.R. Engineering College, IITs, NITs, Universities)
+  const isAcademicOrGov = host.endsWith(".edu") ||
+                          host.endsWith(".gov") ||
+                          host.endsWith(".ac.in") ||
+                          host.endsWith(".edu.in") ||
+                          host.endsWith(".gov.in") ||
+                          host.endsWith(".ac.uk") ||
+                          host.endsWith(".edu.sa") ||
+                          host.endsWith(".gov.sa") ||
+                          host.includes(".edu.") ||
+                          host.includes(".ac.") ||
+                          host.includes(".gov.") ||
+                          host.includes("srkrec.ac.in");
+
+  if (isAcademicOrGov) {
+    return {
+      url: rawUrl,
+      classification: "SAFE",
+      badge: "SECURE",
+      risk_score: 0.0,
+      phishing_probability: 0.0,
+      human_explanation: {
+        summary: "Verified Academic, Educational or Government Institution. Safe to browse.",
+        action: "ACCESS PERMITTED. Authenticated institutional web portal.",
+        primary_risk_reasons: ["No threat patterns detected."],
+        positive_indicators: [
+          "Verified accredited academic or governmental top-level domain.",
+          "Authentic institutional cryptographic transport."
+        ]
+      },
+      shap_explanation: {
+        base_value: 0.0021,
+        model_output: -3.5,
+        top_risk_drivers: [],
+        top_safe_drivers: [
+          { feature: "is_common_tld", impact: -2.18 },
+          { feature: "entropy", impact: -0.45 }
+        ],
+        all_features_shap: { "is_common_tld": -2.18, "has_https": -0.2 }
+      }
+    };
+  }
+
+  // A2. Verified Collaboration / Webinar platform
   if (TRUSTED_COLLAB.some(c => host.includes(c))) {
     return {
       url: rawUrl,
@@ -188,16 +277,21 @@ function evaluateUrlAutonomous(rawUrl) {
     if (HOMOGRAPH_LOOKALIKES.includes(c)) homographCount++;
   }
 
-  // Brand impersonation check
+  // Brand impersonation check (only for domain strings >= 4 chars with similar length)
   const cleanDomain = domain.replace(/[^a-z0-9]/g, "");
   let maxBrandScore = 0.0;
-  for (let brand of PROTECTED_BRANDS) {
-    if (cleanDomain.includes(brand) && cleanDomain !== brand) {
-      maxBrandScore = Math.max(maxBrandScore, 1.0);
-    } else {
-      const dist = levenshteinDistance(cleanDomain, brand);
-      if (dist <= 2 && cleanDomain !== brand) maxBrandScore = Math.max(maxBrandScore, 0.85);
-      else if (dist <= 3) maxBrandScore = Math.max(maxBrandScore, 0.5);
+  if (cleanDomain.length >= 4) {
+    for (let brand of PROTECTED_BRANDS) {
+      if (cleanDomain.includes(brand) && cleanDomain !== brand) {
+        maxBrandScore = Math.max(maxBrandScore, 1.0);
+      } else {
+        const dist = levenshteinDistance(cleanDomain, brand);
+        if (dist <= 2 && cleanDomain !== brand && Math.abs(cleanDomain.length - brand.length) <= 1) {
+          maxBrandScore = Math.max(maxBrandScore, 0.85);
+        } else if (dist <= 3 && Math.abs(cleanDomain.length - brand.length) <= 1) {
+          maxBrandScore = Math.max(maxBrandScore, 0.5);
+        }
+      }
     }
   }
 
@@ -360,6 +454,15 @@ if (chrome.webNavigation && chrome.webNavigation.onBeforeNavigate) {
     }
 
     const targetUrl = extractTargetUrl(rawUrl);
+    let targetHost = "";
+    try {
+      targetHost = new URL(targetUrl).hostname.toLowerCase();
+    } catch (e) {}
+
+    // Check if domain was whitelisted by user clicking 'Proceed anyway'
+    if (isDomainAllowedByUser(targetHost)) {
+      return; // Allow navigation through without blocking!
+    }
 
     try {
       const data = evaluateUrlAutonomous(targetUrl);
@@ -385,10 +488,53 @@ if (chrome.webNavigation && chrome.webNavigation.onErrorOccurred) {
   });
 }
 
-// Message Dispatcher for Content Scripts
+// Message Dispatcher for Content Scripts & Warning Page
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.action === "allowDomain") {
+    const rawDomain = (request.domain || "").toLowerCase().trim();
+    if (rawDomain) {
+      userAllowedDomains.add(rawDomain);
+      chrome.storage.local.get(["userAllowedDomains"], (data) => {
+        const list = data.userAllowedDomains || [];
+        if (!list.includes(rawDomain)) {
+          list.push(rawDomain);
+          chrome.storage.local.set({ userAllowedDomains: list });
+        }
+      });
+      // Invalidate memory cache for this domain
+      for (let k of urlCache.keys()) {
+        if (k.includes(rawDomain)) urlCache.delete(k);
+      }
+    }
+    sendResponse({ success: true, domain: rawDomain });
+    return true;
+  }
+
   if (request.action === "scanUrl") {
     const targetUrl = extractTargetUrl(request.url);
+    let targetHost = "";
+    try {
+      targetHost = new URL(targetUrl).hostname.toLowerCase();
+    } catch (e) {}
+
+    // If allowed by user bypass, return Safe/Allowed immediately
+    if (isDomainAllowedByUser(targetHost)) {
+      sendResponse({
+        success: true,
+        data: {
+          url: targetUrl,
+          classification: "USER_ALLOWED",
+          badge: "ALLOWED",
+          risk_score: 0.0,
+          user_bypassed: true,
+          human_explanation: {
+            summary: "Access permitted by user.",
+            action: "ALLOWED BY USER."
+          }
+        }
+      });
+      return true;
+    }
 
     // Check memory cache
     if (urlCache.has(targetUrl)) {

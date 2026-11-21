@@ -58,6 +58,11 @@ function initPageSecurityCheck() {
     if (response && response.success && response.data) {
       const result = response.data;
 
+      // If domain was whitelisted by user bypass, permit immediately
+      if (result.classification === "USER_ALLOWED" || result.user_bypassed) {
+        return;
+      }
+
       if (result.classification === "URL_NOT_FOUND" || result.status === "unhosted") {
         showOneSecondNotFoundBadge(window.location.hostname);
       } else if (result.risk_score >= 65) {
@@ -183,8 +188,11 @@ function showOnLoadWarningScreen(url, result) {
   });
 
   document.getElementById("pg-onload-btn-proceed").addEventListener("click", () => {
-    sessionStorage.setItem("pg_allowed_" + window.location.hostname, "true");
-    overlay.remove();
+    const domain = window.location.hostname.toLowerCase();
+    sessionStorage.setItem("pg_allowed_" + domain, "true");
+    chrome.runtime.sendMessage({ action: "allowDomain", domain: domain }, () => {
+      overlay.remove();
+    });
   });
 }
 
@@ -381,7 +389,16 @@ function showClickWarningModal(url, result, originalAnchor, originalHref) {
 
   document.getElementById("pg-btn-proceed").addEventListener("click", () => {
     modal.remove();
-    allowNavigation(originalAnchor, originalHref);
+    try {
+      const parsed = new URL(url.startsWith("http") ? url : "http://" + url);
+      const domain = parsed.hostname.toLowerCase();
+      sessionStorage.setItem("pg_allowed_" + domain, "true");
+      chrome.runtime.sendMessage({ action: "allowDomain", domain: domain }, () => {
+        allowNavigation(originalAnchor, originalHref);
+      });
+    } catch (e) {
+      allowNavigation(originalAnchor, originalHref);
+    }
   });
 }
 
