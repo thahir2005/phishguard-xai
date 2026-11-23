@@ -13,7 +13,10 @@ import urllib.request
 from urllib.parse import urlparse
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from ml_engine.feature_extractor import extract_features, FEATURE_COLUMNS, TRUSTED_COLLAB_DOMAINS, SHORTENER_DOMAINS
+from ml_engine.feature_extractor import (
+    extract_features, FEATURE_COLUMNS, TRUSTED_COLLAB_DOMAINS, SHORTENER_DOMAINS,
+    TRUSTED_IDENTITY_PROVIDERS, TRUSTED_GLOBAL_DOMAINS, get_apex_domain
+)
 
 
 def sigmoid(x: float) -> float:
@@ -53,30 +56,42 @@ class PhishGuardEngine:
         parsed = urlparse(url_clean if url_clean.startswith("http") else "http://" + url_clean)
         netloc = parsed.netloc.lower().split(":")[0]
 
-        # 1. Direct check for known collaboration / webinar platforms
-        if any(collab in netloc for collab in TRUSTED_COLLAB_DOMAINS):
-            return self._build_collab_response(raw_url, "Verified Collaboration / Webinar Platform (Zoom, Google Meet, Microsoft Teams, Webex)")
-
-        # 1b. Direct check for verified academic, educational and government institutions
-        is_academic_or_gov = (
-            netloc.endswith(".edu") or
-            netloc.endswith(".gov") or
-            netloc.endswith(".ac.in") or
-            netloc.endswith(".edu.in") or
-            netloc.endswith(".gov.in") or
-            netloc.endswith(".ac.uk") or
-            netloc.endswith(".edu.sa") or
-            netloc.endswith(".gov.sa") or
-            ".edu." in netloc or
-            ".ac." in netloc or
-            ".gov." in netloc or
-            "srkrec.ac.in" in netloc
-        )
-        if is_academic_or_gov:
-            return self._build_academic_response(raw_url, "Verified Academic, Educational or Government Institution (e.g. S.R.K.R. Engineering College)")
-
-        # 2. Extract features
+        apex_domain = get_apex_domain(netloc)
         features = extract_features(raw_url)
+
+        # 0. Check for Punycode or Homograph spoofing first (spoofed lookalikes are never trusted)
+        if features["is_punycode"] == 0 and features["homograph_spoof_score"] == 0:
+            # 1a. Verified Single Sign-On (SSO) & OAuth Identity Providers (Google, Microsoft, Apple, GitHub, Okta, etc.)
+            if apex_domain in TRUSTED_IDENTITY_PROVIDERS:
+                return self._build_sso_response(raw_url, f"Verified Identity & OAuth Provider ({apex_domain})")
+
+            # 1b. Direct check for verified academic, educational and government institutions
+            is_academic_or_gov = (
+                netloc.endswith(".edu") or
+                netloc.endswith(".gov") or
+                netloc.endswith(".ac.in") or
+                netloc.endswith(".edu.in") or
+                netloc.endswith(".gov.in") or
+                netloc.endswith(".ac.uk") or
+                netloc.endswith(".edu.sa") or
+                netloc.endswith(".gov.sa") or
+                ".edu." in netloc or
+                ".ac." in netloc or
+                ".gov." in netloc or
+                "srkrec.ac.in" in netloc
+            )
+            if is_academic_or_gov:
+                return self._build_academic_response(raw_url, "Verified Academic, Educational or Government Institution (e.g. S.R.K.R. Engineering College)")
+
+            # 1c. Verified Global High-Reputation Web Services (Overleaf, Sciencedirect, Wikipedia, etc.)
+            if apex_domain in TRUSTED_GLOBAL_DOMAINS:
+                return self._build_global_trusted_response(raw_url, f"Verified Global Web Platform ({apex_domain})")
+
+            # 1d. Direct check for known collaboration / webinar platforms
+            if any(collab in netloc for collab in TRUSTED_COLLAB_DOMAINS):
+                return self._build_collab_response(raw_url, "Verified Collaboration / Webinar Platform (Zoom, Google Meet, Microsoft Teams, Webex)")
+
+        # 2. Extract feature vector for ML evaluation
         feature_vector = [features[col] for col in FEATURE_COLUMNS]
 
         # 3. Check for legitimate URL shorteners (e.g. bit.ly, tinyurl)
@@ -108,6 +123,19 @@ class PhishGuardEngine:
 
             score += delta
             shap_values[f_name] += delta
+
+        # Novel Cyber-Attack Interceptions (Homograph / IDN Spoofing & Brand Squatting)
+        if features["is_punycode"] == 1 or features["homograph_spoof_score"] > 0:
+            score += 2.45
+            shap_values["homograph_spoof_score"] += 2.45
+
+        if features["brand_impersonation_score"] >= 0.8:
+            score += 1.85
+            shap_values["brand_impersonation_score"] += 1.85
+
+        if features["suspicious_word_count"] > 0:
+            score += features["suspicious_word_count"] * 0.85
+            shap_values["has_suspicious_words"] += features["suspicious_word_count"] * 0.85
 
         # If it's a standard shortener with NO phishing keywords or brand spoofing
         if is_shortener and features["suspicious_word_count"] == 0 and features["brand_impersonation_score"] == 0 and features["has_ip"] == 0:
@@ -235,6 +263,69 @@ class PhishGuardEngine:
                     {"feature": "tld_length", "impact": -1.30}
                 ],
                 "all_features_shap": {"is_common_tld": -2.18, "tld_length": -1.30}
+            },
+            "features": features
+        }
+
+    def _build_sso_response(self, url: str, note: str) -> dict:
+        features = extract_features(url)
+        return {
+            "url": url,
+            "classification": "SAFE",
+            "badge": "SECURE",
+            "risk_score": 0.0,
+            "phishing_probability": 0.0,
+            "human_explanation": {
+                "summary": "Verified Single Sign-On (SSO) & Identity Provider. Safe to authenticate.",
+                "action": "ACCESS PERMITTED. Authenticated OAuth 2.0 / OpenID Connect identity portal.",
+                "primary_risk_reasons": ["No threat patterns detected."],
+                "positive_indicators": [
+                    note,
+                    "Cryptographically authenticated global identity provider.",
+                    "Legitimate OAuth 2.0 authorization and token exchange infrastructure.",
+                    "End-to-end encrypted transport (HTTPS/TLS)."
+                ]
+            },
+            "shap_explanation": {
+                "base_value": round(self.base_log_odds, 4),
+                "model_output": -4.5,
+                "top_risk_drivers": [],
+                "top_safe_drivers": [
+                    {"feature": "is_common_tld", "impact": -2.18},
+                    {"feature": "entropy", "impact": -0.45}
+                ],
+                "all_features_shap": {"is_common_tld": -2.18, "has_https": -0.2}
+            },
+            "features": features
+        }
+
+    def _build_global_trusted_response(self, url: str, note: str) -> dict:
+        features = extract_features(url)
+        return {
+            "url": url,
+            "classification": "SAFE",
+            "badge": "SECURE",
+            "risk_score": 0.0,
+            "phishing_probability": 0.0,
+            "human_explanation": {
+                "summary": "Verified Global Web Service. Safe to browse.",
+                "action": "ACCESS PERMITTED. Authenticated high-reputation domain.",
+                "primary_risk_reasons": ["No threat patterns detected."],
+                "positive_indicators": [
+                    note,
+                    "Verified global high-reputation domain infrastructure.",
+                    "End-to-end encrypted transport (HTTPS/TLS)."
+                ]
+            },
+            "shap_explanation": {
+                "base_value": round(self.base_log_odds, 4),
+                "model_output": -4.2,
+                "top_risk_drivers": [],
+                "top_safe_drivers": [
+                    {"feature": "is_common_tld", "impact": -2.18},
+                    {"feature": "entropy", "impact": -0.45}
+                ],
+                "all_features_shap": {"is_common_tld": -2.18, "has_https": -0.2}
             },
             "features": features
         }

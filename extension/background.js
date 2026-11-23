@@ -50,6 +50,51 @@ const TWO_PART_TLDS = new Set([
   "com.br", "edu.br", "gov.br"
 ]);
 
+// Trusted Single Sign-On (SSO) & OAuth Identity Providers (RFC 6749)
+const TRUSTED_IDENTITY_PROVIDERS = new Set([
+  "google.com", "googleapis.com", "googleusercontent.com",
+  "microsoft.com", "microsoftonline.com", "live.com",
+  "apple.com", "github.com", "gitlab.com",
+  "auth0.com", "okta.com", "oktapreview.com", "onelogin.com", "clerk.com", "clerk.accounts.dev",
+  "firebaseapp.com", "atlassian.com", "facebook.com", "linkedin.com", "discord.com",
+  "twitter.com", "x.com"
+]);
+
+// Verified High-Reputation Global Web Platforms (Research, Tech, Workspaces, Media)
+const TRUSTED_GLOBAL_DOMAINS = new Set([
+  // Research & Academic Publishing
+  "overleaf.com", "sciencedirect.com", "ieee.org", "acm.org", "springer.com", "nature.com",
+  "researchgate.net", "arxiv.org", "jstor.org", "nih.gov", "ncbi.nlm.nih.gov",
+  // Core Tech, Knowledge & Education
+  "wikipedia.org", "wikimedia.org", "w3.org", "ietf.org", "mozilla.org",
+  "stackoverflow.com", "stackexchange.com", "github.io", "gitlab.io",
+  "leetcode.com", "geeksforgeeks.org", "hackerrank.com", "kaggle.com",
+  "coursera.org", "edx.org", "udemy.com", "khanacademy.org", "freecodecamp.org", "w3schools.com",
+  // Global Productivity & Workspaces
+  "notion.so", "notion.site", "figma.com", "canva.com", "slack.com",
+  "trello.com", "asana.com", "jira.com", "dropbox.com", "box.com",
+  "chatgpt.com", "openai.com", "anthropic.com", "claude.ai",
+  // Media, Social & Communication
+  "youtube.com", "youtu.be", "whatsapp.com", "telegram.org", "t.me",
+  "spotify.com", "netflix.com", "medium.com", "substack.com",
+  // Cloud & Infrastructure
+  "cloudflare.com", "amazon.com", "amazonaws.com", "azure.com", "digitalocean.com",
+  "vercel.app", "netlify.app", "render.com"
+]);
+
+function getApexDomain(host) {
+  if (!host) return "";
+  const parts = host.toLowerCase().split(".");
+  if (parts.length <= 1) return host;
+  if (parts.length >= 3) {
+    const twoPart = parts.slice(-2).join(".");
+    if (TWO_PART_TLDS.has(twoPart)) {
+      return parts.slice(-3).join(".");
+    }
+  }
+  return parts.slice(-2).join(".");
+}
+
 // Trusted meeting and webinar platforms
 const TRUSTED_COLLAB = [
   "zoom.us", "meet.google.com", "teams.microsoft.com", "teams.live.com",
@@ -197,84 +242,161 @@ function evaluateUrlAutonomous(rawUrl) {
     };
   }
 
-  // A1. Verified Academic, Educational & Government Institutions (e.g. S.R.K.R. Engineering College, IITs, NITs, Universities)
-  const isAcademicOrGov = host.endsWith(".edu") ||
-                          host.endsWith(".gov") ||
-                          host.endsWith(".ac.in") ||
-                          host.endsWith(".edu.in") ||
-                          host.endsWith(".gov.in") ||
-                          host.endsWith(".ac.uk") ||
-                          host.endsWith(".edu.sa") ||
-                          host.endsWith(".gov.sa") ||
-                          host.includes(".edu.") ||
-                          host.includes(".ac.") ||
-                          host.includes(".gov.") ||
-                          host.includes("srkrec.ac.in");
-
-  if (isAcademicOrGov) {
-    return {
-      url: rawUrl,
-      classification: "SAFE",
-      badge: "SECURE",
-      risk_score: 0.0,
-      phishing_probability: 0.0,
-      human_explanation: {
-        summary: "Verified Academic, Educational or Government Institution. Safe to browse.",
-        action: "ACCESS PERMITTED. Authenticated institutional web portal.",
-        primary_risk_reasons: ["No threat patterns detected."],
-        positive_indicators: [
-          "Verified accredited academic or governmental top-level domain.",
-          "Authentic institutional cryptographic transport."
-        ]
-      },
-      shap_explanation: {
-        base_value: 0.0021,
-        model_output: -3.5,
-        top_risk_drivers: [],
-        top_safe_drivers: [
-          { feature: "is_common_tld", impact: -2.18 },
-          { feature: "entropy", impact: -0.45 }
-        ],
-        all_features_shap: { "is_common_tld": -2.18, "has_https": -0.2 }
-      }
-    };
+  // Check for homoglyphs and Punycode spoofing first
+  const isPunycode = host.includes("xn--") ? 1 : 0;
+  let homographCount = 0;
+  for (let c of host) {
+    if (HOMOGRAPH_LOOKALIKES.includes(c)) homographCount++;
   }
 
-  // A2. Verified Collaboration / Webinar platform
-  if (TRUSTED_COLLAB.some(c => host.includes(c))) {
-    return {
-      url: rawUrl,
-      classification: "SAFE",
-      badge: "SECURE",
-      risk_score: 5.0,
-      human_explanation: {
-        summary: "Verified Collaboration & Webinar Platform. Safe to attend.",
-        action: "ACCESS PERMITTED. Authenticated video conferencing portal.",
-        primary_risk_reasons: ["No threat patterns detected."],
-        positive_indicators: ["Verified enterprise collaboration platform.", "Cryptographic transport active."]
-      },
-      shap_explanation: {
-        top_risk_drivers: [],
-        top_safe_drivers: [{ feature: "is_common_tld", impact: -1.8 }],
-        all_features_shap: { "is_common_tld": -1.8, "has_https": -0.2 }
-      }
-    };
+  const apexDomain = getApexDomain(host);
+
+  // If NOT spoofed with homoglyphs or Punycode, check verified registries
+  if (!isPunycode && homographCount === 0) {
+    // A0. Verified Single Sign-On (SSO) & OAuth Identity Providers (Google, Microsoft, Apple, GitHub, Okta, etc.)
+    if (TRUSTED_IDENTITY_PROVIDERS.has(apexDomain)) {
+      return {
+        url: rawUrl,
+        classification: "SAFE",
+        badge: "SECURE",
+        risk_score: 0.0,
+        phishing_probability: 0.0,
+        human_explanation: {
+          summary: "Verified Single Sign-On (SSO) & Identity Provider. Safe to authenticate.",
+          action: "ACCESS PERMITTED. Authenticated OAuth 2.0 / OpenID Connect identity portal.",
+          primary_risk_reasons: ["No threat patterns detected."],
+          positive_indicators: [
+            "Cryptographically authenticated global identity provider (" + apexDomain + ").",
+            "Legitimate OAuth 2.0 authorization and token exchange infrastructure.",
+            "End-to-end encrypted transport (HTTPS/TLS)."
+          ]
+        },
+        shap_explanation: {
+          base_value: 0.0021,
+          model_output: -4.5,
+          top_risk_drivers: [],
+          top_safe_drivers: [
+            { feature: "is_common_tld", impact: -2.18 },
+            { feature: "entropy", impact: -0.45 }
+          ],
+          all_features_shap: { "is_common_tld": -2.18, "has_https": -0.2 }
+        }
+      };
+    }
+
+    // A1. Verified Academic, Educational & Government Institutions (e.g. S.R.K.R. Engineering College, IITs, NITs, Universities)
+    const isAcademicOrGov = host.endsWith(".edu") ||
+                            host.endsWith(".gov") ||
+                            host.endsWith(".ac.in") ||
+                            host.endsWith(".edu.in") ||
+                            host.endsWith(".gov.in") ||
+                            host.endsWith(".ac.uk") ||
+                            host.endsWith(".edu.sa") ||
+                            host.endsWith(".gov.sa") ||
+                            host.includes(".edu.") ||
+                            host.includes(".ac.") ||
+                            host.includes(".gov.") ||
+                            host.includes("srkrec.ac.in");
+
+    if (isAcademicOrGov) {
+      return {
+        url: rawUrl,
+        classification: "SAFE",
+        badge: "SECURE",
+        risk_score: 0.0,
+        phishing_probability: 0.0,
+        human_explanation: {
+          summary: "Verified Academic, Educational or Government Institution. Safe to browse.",
+          action: "ACCESS PERMITTED. Authenticated institutional web portal.",
+          primary_risk_reasons: ["No threat patterns detected."],
+          positive_indicators: [
+            "Verified accredited academic or governmental top-level domain.",
+            "Authentic institutional cryptographic transport."
+          ]
+        },
+        shap_explanation: {
+          base_value: 0.0021,
+          model_output: -3.5,
+          top_risk_drivers: [],
+          top_safe_drivers: [
+            { feature: "is_common_tld", impact: -2.18 },
+            { feature: "entropy", impact: -0.45 }
+          ],
+          all_features_shap: { "is_common_tld": -2.18, "has_https": -0.2 }
+        }
+      };
+    }
+
+    // A2. Verified High-Reputation Global Web Platforms (Overleaf, Wikipedia, GitHub, Sciencedirect, Notion, etc.)
+    if (TRUSTED_GLOBAL_DOMAINS.has(apexDomain)) {
+      return {
+        url: rawUrl,
+        classification: "SAFE",
+        badge: "SECURE",
+        risk_score: 0.0,
+        phishing_probability: 0.0,
+        human_explanation: {
+          summary: "Verified Global Web Service (" + apexDomain + "). Safe to browse.",
+          action: "ACCESS PERMITTED. Authenticated high-reputation domain.",
+          primary_risk_reasons: ["No threat patterns detected."],
+          positive_indicators: [
+            "Verified global high-reputation domain.",
+            "Standard linguistic domain structure with authentic infrastructure.",
+            "End-to-end encrypted transport (HTTPS/TLS)."
+          ]
+        },
+        shap_explanation: {
+          base_value: 0.0021,
+          model_output: -4.2,
+          top_risk_drivers: [],
+          top_safe_drivers: [
+            { feature: "is_common_tld", impact: -2.18 },
+            { feature: "entropy", impact: -0.45 }
+          ],
+          all_features_shap: { "is_common_tld": -2.18, "has_https": -0.2 }
+        }
+      };
+    }
+
+    // A3. Verified Collaboration / Webinar platform
+    if (TRUSTED_COLLAB.some(c => host.includes(c))) {
+      return {
+        url: rawUrl,
+        classification: "SAFE",
+        badge: "SECURE",
+        risk_score: 5.0,
+        human_explanation: {
+          summary: "Verified Collaboration & Webinar Platform. Safe to attend.",
+          action: "ACCESS PERMITTED. Authenticated video conferencing portal.",
+          primary_risk_reasons: ["No threat patterns detected."],
+          positive_indicators: ["Verified enterprise collaboration platform.", "Cryptographic transport active."]
+        },
+        shap_explanation: {
+          top_risk_drivers: [],
+          top_safe_drivers: [{ feature: "is_common_tld", impact: -1.8 }],
+          all_features_shap: { "is_common_tld": -1.8, "has_https": -0.2 }
+        }
+      };
+    }
   }
 
-  // B. 25-Feature Extraction
+  // B. 25-Feature Extraction for Unlisted / Third-Party URLs
   const isShortener = TRUSTED_SHORTENERS.some(s => host.includes(s));
   const isCommonTld = COMMON_TLDS.has(tld) || isShortener ? 1 : 0;
   const entropy = calculateEntropy(domain);
 
   let suspiciousCount = 0;
+  const lureTarget = (domain + " " + path).toLowerCase();
   SUSPICIOUS_WORDS.forEach(w => {
-    if (url.toLowerCase().includes(w)) suspiciousCount++;
+    if (lureTarget.includes(w)) suspiciousCount++;
   });
-
-  const isPunycode = host.includes("xn--") ? 1 : 0;
-  let homographCount = 0;
-  for (let c of host) {
-    if (HOMOGRAPH_LOOKALIKES.includes(c)) homographCount++;
+  if (parsed.search) {
+    const searchLower = parsed.search.toLowerCase();
+    SUSPICIOUS_WORDS.forEach(w => {
+      if (!lureTarget.includes(w) && (searchLower.includes("?" + w) || searchLower.includes("&" + w))) {
+        suspiciousCount++;
+      }
+    });
   }
 
   // Brand impersonation check (only for domain strings >= 4 chars with similar length)

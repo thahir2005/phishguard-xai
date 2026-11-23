@@ -242,6 +242,19 @@ function handleLinkClick(e) {
     if (urlObj.hostname === window.location.hostname && urlObj.pathname === window.location.pathname) {
       return;
     }
+
+    // Allow immediate, zero-latency navigation to trusted Identity Providers (Google, Microsoft, Apple, GitHub)
+    // so synchronous OAuth user gestures and popups are never interrupted or blocked
+    const host = urlObj.hostname.toLowerCase();
+    const parts = host.split(".");
+    let apex = parts.slice(-2).join(".");
+    if (parts.length >= 3 && (parts.slice(-2).join(".") === "ac.in" || parts.slice(-2).join(".") === "co.uk" || parts.slice(-2).join(".") === "gov.in")) {
+      apex = parts.slice(-3).join(".");
+    }
+    const trustedIdPs = ["google.com", "microsoftonline.com", "live.com", "apple.com", "github.com", "auth0.com", "okta.com", "firebaseapp.com", "atlassian.com"];
+    if (trustedIdPs.includes(apex) && !host.includes("xn--")) {
+      return; // Do not preventDefault; let native OAuth popup/redirect fire instantly!
+    }
   } catch (err) {
     return;
   }

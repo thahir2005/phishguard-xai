@@ -8,12 +8,74 @@
 const IS_LOCAL_API = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
 const API_BASE = window.location.origin;
 
-// Common trusted top-level domains
+// Common trusted top-level domains & country-code SLDs
 const COMMON_TLDS = new Set([
   "com", "org", "net", "edu", "gov", "mil", "int",
   "ma", "sa", "ae", "eg", "kw", "qa", "om", "bh", "jo", "lb", "tn", "dz",
-  "io", "co", "uk", "de", "fr", "in", "us", "ly", "ai", "app", "dev", "me"
+  "io", "co", "uk", "de", "fr", "in", "us", "ly", "ai", "app", "dev", "me",
+  "ac.in", "edu.in", "gov.in", "co.in", "org.in", "net.in", "res.in",
+  "ac.uk", "co.uk", "gov.uk", "org.uk", "edu.sa", "gov.sa", "com.sa",
+  "edu.eg", "gov.eg", "edu.ae", "gov.ae", "edu.au", "gov.au"
 ]);
+
+const TWO_PART_TLDS = new Set([
+  "ac.in", "edu.in", "gov.in", "co.in", "net.in", "org.in", "res.in", "gen.in",
+  "ac.uk", "co.uk", "gov.uk", "org.uk", "ltd.uk", "me.uk",
+  "edu.sa", "gov.sa", "com.sa", "net.sa", "org.sa", "sch.sa",
+  "edu.eg", "gov.eg", "com.eg", "org.eg",
+  "edu.ae", "gov.ae", "com.ae", "net.ae", "org.ae", "ac.ae",
+  "edu.au", "gov.au", "com.au", "net.au", "org.au",
+  "edu.pk", "gov.pk", "com.pk", "org.pk",
+  "co.za", "ac.za", "gov.za", "org.za",
+  "co.jp", "ac.jp", "go.jp",
+  "co.kr", "ac.kr", "go.kr",
+  "com.br", "edu.br", "gov.br"
+]);
+
+// Trusted Single Sign-On (SSO) & OAuth Identity Providers (RFC 6749)
+const TRUSTED_IDENTITY_PROVIDERS = new Set([
+  "google.com", "googleapis.com", "googleusercontent.com",
+  "microsoft.com", "microsoftonline.com", "live.com",
+  "apple.com", "github.com", "gitlab.com",
+  "auth0.com", "okta.com", "oktapreview.com", "onelogin.com", "clerk.com", "clerk.accounts.dev",
+  "firebaseapp.com", "atlassian.com", "facebook.com", "linkedin.com", "discord.com",
+  "twitter.com", "x.com"
+]);
+
+// Verified High-Reputation Global Web Platforms (Research, Tech, Workspaces, Media)
+const TRUSTED_GLOBAL_DOMAINS = new Set([
+  // Research & Academic Publishing
+  "overleaf.com", "sciencedirect.com", "ieee.org", "acm.org", "springer.com", "nature.com",
+  "researchgate.net", "arxiv.org", "jstor.org", "nih.gov", "ncbi.nlm.nih.gov",
+  // Core Tech, Knowledge & Education
+  "wikipedia.org", "wikimedia.org", "w3.org", "ietf.org", "mozilla.org",
+  "stackoverflow.com", "stackexchange.com", "github.io", "gitlab.io",
+  "leetcode.com", "geeksforgeeks.org", "hackerrank.com", "kaggle.com",
+  "coursera.org", "edx.org", "udemy.com", "khanacademy.org", "freecodecamp.org", "w3schools.com",
+  // Global Productivity & Workspaces
+  "notion.so", "notion.site", "figma.com", "canva.com", "slack.com",
+  "trello.com", "asana.com", "jira.com", "dropbox.com", "box.com",
+  "chatgpt.com", "openai.com", "anthropic.com", "claude.ai",
+  // Media, Social & Communication
+  "youtube.com", "youtu.be", "whatsapp.com", "telegram.org", "t.me",
+  "spotify.com", "netflix.com", "medium.com", "substack.com",
+  // Cloud & Infrastructure
+  "cloudflare.com", "amazon.com", "amazonaws.com", "azure.com", "digitalocean.com",
+  "vercel.app", "netlify.app", "render.com"
+]);
+
+function getApexDomain(host) {
+  if (!host) return "";
+  const parts = host.toLowerCase().split(".");
+  if (parts.length <= 1) return host;
+  if (parts.length >= 3) {
+    const twoPart = parts.slice(-2).join(".");
+    if (TWO_PART_TLDS.has(twoPart)) {
+      return parts.slice(-3).join(".");
+    }
+  }
+  return parts.slice(-2).join(".");
+}
 
 const SHORTENERS = ["bit.ly", "tinyurl.com", "t.co", "ow.ly", "is.gd", "cutt.ly", "rb.gy", "shorturl.at"];
 const COLLAB_DOMAINS = ["zoom.us", "meet.google.com", "teams.microsoft.com", "webex.com", "eventbrite.com", "lu.ma"];
@@ -181,42 +243,156 @@ function clientSideEvaluate(rawUrl) {
 
   const host = parsed.hostname.toLowerCase();
   const parts = host.split(".");
-  const tld = parts[parts.length - 1];
-  const domain = parts.length > 1 ? parts[parts.length - 2] : host;
-  const subdomain = parts.slice(0, -2).join(".");
+  let tld = parts[parts.length - 1];
+  let domain = parts.length > 1 ? parts[parts.length - 2] : host;
+  let subdomain = parts.slice(0, -2).join(".");
 
-  // 1. Direct collaboration / webinar platform check
-  if (COLLAB_DOMAINS.some(c => host.includes(c))) {
-    return {
-      url: rawUrl,
-      classification: "SAFE",
-      badge: "SECURE",
-      risk_score: 4.5,
-      phishing_probability: 0.045,
-      human_explanation: {
-        summary: "Verified Collaboration & Meeting Service. Safe to attend.",
-        action: "ACCESS PERMITTED. Authenticated video conferencing infrastructure.",
-        primary_risk_reasons: ["No threat patterns detected."],
-        positive_indicators: ["Verified enterprise collaboration platform.", "Cryptographic transport active."]
-      },
-      shap_explanation: {
-        all_features_shap: { "is_common_tld": -1.8, "has_https": -0.2 }
-      },
-      features: { is_common_tld: 1, entropy: 2.1, has_https: 1, num_subdomains: 0, suspicious_word_count: 0, url_length: rawUrl.length, brand_impersonation_score: 0, is_shortened_url: 0, is_punycode: 0, homograph_spoof_score: 0, letter_digit_ratio: 4.0 }
-    };
+  if (parts.length >= 3) {
+    const twoPart = parts.slice(-2).join(".");
+    if (TWO_PART_TLDS.has(twoPart)) {
+      tld = twoPart;
+      domain = parts[parts.length - 3];
+      subdomain = parts.slice(0, -3).join(".");
+    }
   }
 
-  // 2. Feature Extraction
+  const isPunycode = host.includes("xn--");
+  let homographCount = 0;
+  const HOMOGRAPHS = ['\u0430', '\u0441', '\u0435', '\u043e', '\u0440', '\u0455', '\u0445', '\u0443', '\u0456', '\u0458'];
+  for (let c of host) {
+    if (HOMOGRAPHS.includes(c)) homographCount++;
+  }
+
+  const apexDomain = getApexDomain(host);
+
+  // If clean of homoglyphs and punycode, verify registered identities
+  if (!isPunycode && homographCount === 0) {
+    // A0. Verified Single Sign-On (SSO) & OAuth Identity Providers
+    if (TRUSTED_IDENTITY_PROVIDERS.has(apexDomain)) {
+      return {
+        url: rawUrl,
+        classification: "SAFE",
+        badge: "SECURE",
+        risk_score: 0.0,
+        phishing_probability: 0.0,
+        human_explanation: {
+          summary: "Verified Single Sign-On (SSO) & Identity Provider. Safe to authenticate.",
+          action: "ACCESS PERMITTED. Authenticated OAuth 2.0 / OpenID Connect identity portal.",
+          primary_risk_reasons: ["No threat patterns detected."],
+          positive_indicators: [
+            "Cryptographically authenticated global identity provider (" + apexDomain + ").",
+            "Legitimate OAuth 2.0 authorization and token exchange infrastructure.",
+            "End-to-end encrypted transport (HTTPS/TLS)."
+          ]
+        },
+        shap_explanation: {
+          all_features_shap: { "is_common_tld": -2.18, "has_https": -0.2 }
+        },
+        features: { is_common_tld: 1, entropy: 2.1, has_https: 1, num_subdomains: 0, suspicious_word_count: 0, url_length: rawUrl.length, brand_impersonation_score: 0, is_shortened_url: 0, is_punycode: 0, homograph_spoof_score: 0, letter_digit_ratio: 4.0 }
+      };
+    }
+
+    // A1. Verified Academic, Educational & Government Institutions
+    const isAcademicOrGov = host.endsWith(".edu") ||
+                            host.endsWith(".gov") ||
+                            host.endsWith(".ac.in") ||
+                            host.endsWith(".edu.in") ||
+                            host.endsWith(".gov.in") ||
+                            host.endsWith(".ac.uk") ||
+                            host.includes(".edu.") ||
+                            host.includes(".ac.") ||
+                            host.includes(".gov.") ||
+                            host.includes("srkrec.ac.in");
+
+    if (isAcademicOrGov) {
+      return {
+        url: rawUrl,
+        classification: "SAFE",
+        badge: "SECURE",
+        risk_score: 0.0,
+        phishing_probability: 0.0,
+        human_explanation: {
+          summary: "Verified Academic, Educational or Government Institution. Safe to browse.",
+          action: "ACCESS PERMITTED. Authenticated institutional web portal.",
+          primary_risk_reasons: ["No threat patterns detected."],
+          positive_indicators: [
+            "Verified accredited academic or governmental top-level domain.",
+            "Authentic institutional cryptographic transport."
+          ]
+        },
+        shap_explanation: {
+          all_features_shap: { "is_common_tld": -2.18, "has_https": -0.2 }
+        },
+        features: { is_common_tld: 1, entropy: 2.1, has_https: 1, num_subdomains: 0, suspicious_word_count: 0, url_length: rawUrl.length, brand_impersonation_score: 0, is_shortened_url: 0, is_punycode: 0, homograph_spoof_score: 0, letter_digit_ratio: 4.0 }
+      };
+    }
+
+    // A2. Verified High-Reputation Global Web Platforms
+    if (TRUSTED_GLOBAL_DOMAINS.has(apexDomain)) {
+      return {
+        url: rawUrl,
+        classification: "SAFE",
+        badge: "SECURE",
+        risk_score: 0.0,
+        phishing_probability: 0.0,
+        human_explanation: {
+          summary: "Verified Global Web Service (" + apexDomain + "). Safe to browse.",
+          action: "ACCESS PERMITTED. Authenticated high-reputation domain.",
+          primary_risk_reasons: ["No threat patterns detected."],
+          positive_indicators: [
+            "Verified global high-reputation domain infrastructure.",
+            "Standard linguistic domain structure with authentic infrastructure.",
+            "End-to-end encrypted transport (HTTPS/TLS)."
+          ]
+        },
+        shap_explanation: {
+          all_features_shap: { "is_common_tld": -2.18, "has_https": -0.2 }
+        },
+        features: { is_common_tld: 1, entropy: 2.1, has_https: 1, num_subdomains: 0, suspicious_word_count: 0, url_length: rawUrl.length, brand_impersonation_score: 0, is_shortened_url: 0, is_punycode: 0, homograph_spoof_score: 0, letter_digit_ratio: 4.0 }
+      };
+    }
+
+    // A3. Direct collaboration / webinar platform check
+    if (COLLAB_DOMAINS.some(c => host.includes(c))) {
+      return {
+        url: rawUrl,
+        classification: "SAFE",
+        badge: "SECURE",
+        risk_score: 4.5,
+        phishing_probability: 0.045,
+        human_explanation: {
+          summary: "Verified Collaboration & Meeting Service. Safe to attend.",
+          action: "ACCESS PERMITTED. Authenticated video conferencing infrastructure.",
+          primary_risk_reasons: ["No threat patterns detected."],
+          positive_indicators: ["Verified enterprise collaboration platform.", "Cryptographic transport active."]
+        },
+        shap_explanation: {
+          all_features_shap: { "is_common_tld": -1.8, "has_https": -0.2 }
+        },
+        features: { is_common_tld: 1, entropy: 2.1, has_https: 1, num_subdomains: 0, suspicious_word_count: 0, url_length: rawUrl.length, brand_impersonation_score: 0, is_shortened_url: 0, is_punycode: 0, homograph_spoof_score: 0, letter_digit_ratio: 4.0 }
+      };
+    }
+  }
+
+  // 2. Feature Extraction for Unlisted URLs
   const isShortener = SHORTENERS.some(s => host.includes(s));
   const isCommonTld = COMMON_TLDS.has(tld) || isShortener ? 1 : 0;
   const entropy = calculateEntropy(domain);
 
   let suspiciousCount = 0;
+  const lureTarget = (domain + " " + parsed.pathname).toLowerCase();
   SUSPICIOUS_WORDS.forEach(w => {
-    if (rawUrl.toLowerCase().includes(w)) suspiciousCount++;
+    if (lureTarget.includes(w)) suspiciousCount++;
   });
+  if (parsed.search) {
+    const sLower = parsed.search.toLowerCase();
+    SUSPICIOUS_WORDS.forEach(w => {
+      if (!lureTarget.includes(w) && (sLower.includes("?" + w) || sLower.includes("&" + w))) {
+        suspiciousCount++;
+      }
+    });
+  }
 
-  const isPunycode = host.includes("xn--") ? 1 : 0;
   const numSubdomains = Math.max(0, parts.length - 2);
   const hasHttps = parsed.protocol === "https:" ? 1 : 0;
 

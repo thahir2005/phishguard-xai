@@ -34,6 +34,48 @@ TWO_PART_TLDS = {
     "com.br", "edu.br", "gov.br"
 }
 
+# Trusted Single Sign-On (SSO) & OAuth Identity Providers (RFC 6749)
+TRUSTED_IDENTITY_PROVIDERS = {
+    "google.com", "googleapis.com", "googleusercontent.com",
+    "microsoft.com", "microsoftonline.com", "live.com",
+    "apple.com", "github.com", "gitlab.com",
+    "auth0.com", "okta.com", "oktapreview.com", "onelogin.com", "clerk.com", "clerk.accounts.dev",
+    "firebaseapp.com", "atlassian.com", "facebook.com", "linkedin.com", "discord.com",
+    "twitter.com", "x.com"
+}
+
+# Verified High-Reputation Global Web Platforms (Research, Tech, Workspaces, Media)
+TRUSTED_GLOBAL_DOMAINS = {
+    # Research & Academic Publishing
+    "overleaf.com", "sciencedirect.com", "ieee.org", "acm.org", "springer.com", "nature.com",
+    "researchgate.net", "arxiv.org", "jstor.org", "nih.gov", "ncbi.nlm.nih.gov",
+    # Core Tech, Knowledge & Education
+    "wikipedia.org", "wikimedia.org", "w3.org", "ietf.org", "mozilla.org",
+    "stackoverflow.com", "stackexchange.com", "github.io", "gitlab.io",
+    "leetcode.com", "geeksforgeeks.org", "hackerrank.com", "kaggle.com",
+    "coursera.org", "edx.org", "udemy.com", "khanacademy.org", "freecodecamp.org", "w3schools.com",
+    # Global Productivity & Workspaces
+    "notion.so", "notion.site", "figma.com", "canva.com", "slack.com",
+    "trello.com", "asana.com", "jira.com", "dropbox.com", "box.com",
+    "chatgpt.com", "openai.com", "anthropic.com", "claude.ai",
+    # Media, Social & Communication
+    "youtube.com", "youtu.be", "whatsapp.com", "telegram.org", "t.me",
+    "spotify.com", "netflix.com", "medium.com", "substack.com",
+    # Cloud & Infrastructure
+    "cloudflare.com", "amazon.com", "amazonaws.com", "azure.com", "digitalocean.com",
+    "vercel.app", "netlify.app", "render.com"
+}
+
+def get_apex_domain(host: str) -> str:
+    if not host:
+        return ""
+    parts = host.lower().split(".")
+    if len(parts) <= 1:
+        return host
+    if len(parts) >= 3 and ".".join(parts[-2:]) in TWO_PART_TLDS:
+        return ".".join(parts[-3:])
+    return ".".join(parts[-2:])
+
 # Known URL shortener services
 SHORTENER_DOMAINS = {
     "bit.ly", "goo.gl", "tinyurl.com", "t.co", "ow.ly", "is.gd",
@@ -200,10 +242,15 @@ def extract_features(raw_url: str) -> dict:
     is_shortened_url = 1 if any(shortener in netloc for shortener in SHORTENER_DOMAINS) else 0
 
     # 10. has_suspicious_words & 11. suspicious_word_count
-    url_lower = url.lower()
+    lure_target = (domain_part + " " + path).lower()
     suspicious_count = 0
     for word in SUSPICIOUS_WORDS:
-        suspicious_count += url_lower.count(word)
+        suspicious_count += lure_target.count(word)
+    if query:
+        q_lower = query.lower()
+        for word in SUSPICIOUS_WORDS:
+            if word not in lure_target and (f"?{word}" in q_lower or f"&{word}" in q_lower or f"={word}" in q_lower):
+                suspicious_count += 1
     has_suspicious_words = 1 if suspicious_count > 0 else 0
     suspicious_word_count = suspicious_count
 
